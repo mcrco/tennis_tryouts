@@ -1,8 +1,10 @@
 import fileinput
 import pandas as pd
 
+# Dictionary stores records for a player
 records = {}
 
+# Data structure to store match result for a given player
 class record:
     def __init__(self, opp, res, s1, s2):
         self.opponent = opp
@@ -10,6 +12,7 @@ class record:
         self.my_score = s1
         self.opp_score = s2
 
+# Counts number of wins a player has
 def win_count(player):
     count = 0
     for rec in records[player]:
@@ -17,6 +20,7 @@ def win_count(player):
             count += 1
     return count
 
+# Take in records from a spreadsheet
 for line in fileinput.input(files = 'record.txt'):
     args = line.split()
 
@@ -38,12 +42,11 @@ for line in fileinput.input(files = 'record.txt'):
         records[p1].append(record(p2, 'loss', g1, g2))
         records[p2].append(record(p1, 'win', g2, g1))
 
-players = list(records.keys())
-players.sort(reverse=True, key=lambda player : win_count(player))
-
+# Printing a record
 def print_rec(rec, player):
     print(player, "beat" if rec.result == 'win' else "lost to", rec.opponent, rec.my_score, '-', rec.opp_score)
 
+# BFS to compare 2 players
 def deep_comp(p1, p2):
     q = []
     for rec in records[p1]:
@@ -65,29 +68,38 @@ def deep_comp(p1, p2):
             if next.result == rec.result:
                 q.append((next, degrees + 1))
 
+# Interactive program
 while True:
     line = input()
     if line == 'quit':
         break
     args = str(line).split()
 
+    # Print leaderboard
     if args[0] == 'lb':
         players = list(records.keys())
         players.sort(reverse=True, key=lambda player : win_count(player))
         for player in players:
             print(player, win_count(player))
     
+    # Print comparison between two players
     elif args[0] == 'comp':
         p1 = args[1]
         p2 = args[2]
+        
+        # Number of wins
         print(p1, 'has', win_count(p1), 'wins')
         print(p2, 'has', win_count(p2), 'wins')
+        
+        # Check if they have played before
         for rec in records[p1]:
-            print_rec(rec, p1)
-            if rec.opponent == p1:
+            if rec.opponent == p2:
                 print_rec(rec, p1)
+
+        # Check if they can be indirectly compared
         deep_comp(p1, p2)
 
+    # Print all records of player
     elif args[0] == 'stat':
         for rec in records[args[1]]:
             print_rec(rec, args[1])
