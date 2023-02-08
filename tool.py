@@ -1,5 +1,6 @@
+#!/bin/python3
+
 import fileinput
-import pandas as pd
 
 # Dictionary stores records for a player
 records = {}
@@ -21,8 +22,8 @@ def win_count(player):
     return count
 
 # Take in records from a spreadsheet
-for line in fileinput.input(files = 'record.txt'):
-    args = line.split()
+for line in fileinput.input(files = 'records.csv'):
+    args = line.split(',')
 
     p1 = args[0]
     if p1 not in records:
@@ -47,7 +48,7 @@ def print_rec(rec, player):
     print(player, "beat" if rec.result == 'win' else "lost to", rec.opponent, rec.my_score, '-', rec.opp_score)
 
 # BFS to compare 2 players
-def deep_comp(p1, p2):
+def bfs_comp(p1, p2):
     q = []
     for rec in records[p1]:
         q.append((rec, 1))
@@ -75,17 +76,19 @@ while True:
         break
     args = str(line).split()
 
+    command = args[0]
+    p1 = args[1] + ' ' + args[2]
+
     # Print leaderboard
-    if args[0] == 'lb':
+    if command == 'lb':
         players = list(records.keys())
         players.sort(reverse=True, key=lambda player : win_count(player))
         for player in players:
             print(player, win_count(player))
     
     # Print comparison between two players
-    elif args[0] == 'comp':
-        p1 = args[1]
-        p2 = args[2]
+    elif command == 'comp':
+        p2 = args[3] + ' ' + args[4]
         
         # Number of wins
         print(p1, 'has', win_count(p1), 'wins')
@@ -97,9 +100,9 @@ while True:
                 print_rec(rec, p1)
 
         # Check if they can be indirectly compared
-        deep_comp(p1, p2)
+        bfs_comp(p1, p2)
 
     # Print all records of player
-    elif args[0] == 'stat':
-        for rec in records[args[1]]:
-            print_rec(rec, args[1])
+    elif command == 'stat':
+        for rec in records[p1]:
+            print_rec(rec, p1)
