@@ -1,6 +1,6 @@
-#!/bin/python3
+#!/opt/homebrew/Caskroom/miniconda/base/bin/python
 
-import fileinput
+import json
 
 # Dictionary stores records for a player
 records = {}
@@ -22,19 +22,18 @@ def win_count(player):
     return count
 
 # Take in records from a spreadsheet
-for line in fileinput.input(files = 'records.csv'):
-    args = line.split(',')
-
-    p1 = args[0]
+f = open('app/imports/assets/records.json')
+for rec in json.load(f):
+    p1 = rec['p1']
     if p1 not in records:
         records[p1] = []
 
-    p2 = args[1]
+    p2 = rec['p2']
     if p2 not in records:
         records[p2] = []
 
-    g1 = args[2]
-    g2 = args[3]
+    g1 = rec['s1']
+    g2 = rec['s2']
 
     if (g1 > g2):
         records[p1].append(record(p2, 'win', g1, g2))
