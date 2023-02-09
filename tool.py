@@ -59,7 +59,6 @@ def bfs_comp(p1, p2):
     q = []
     for rec in records[p1]:
         q.append((rec, []))
-        print_rec(rec, p1)
 
     visited = []
     while (q):
@@ -68,21 +67,20 @@ def bfs_comp(p1, p2):
         if rec.opponent in visited:
             continue
         visited.append(rec.opponent)
-        opps.append(rec.opponent)
+        new_opps = opps + [rec.opponent]
 
         if (rec.opponent == p2):
-            print(p1, 'has a', len(opps), 'degree', rec.result, 'against', p2)
-            print(opps)
+            print(p1, 'has a', len(opps) + 1, 'degree', rec.result, 'against', p2)
             curr = p1
             for opp in opps:
                 comp(curr, opp)
                 curr = opp
+            print_rec(rec, opps[len(opps) - 1])
             break
 
         for next in records[rec.opponent]:
             if next.result == rec.result:
-                print_rec(next, rec.opponent)
-                q.append((next, opps))
+                q.append((next, new_opps))
 
 def bfs_comp_val(p1, p2):
     q = []
@@ -107,16 +105,12 @@ def bfs_comp_val(p1, p2):
     return win_count(p2) - win_count(p1)
 
 # players = ['Nikhil Aadapu', 'Sourodeep Deb', 'Warren Zhou', 'Charles Wang', 'Neev Fnu', 'Sreesh Srinivasan', 'Aaron Li', 'Rishabh Shah', 'Lakshmi Prasanna', 'Sairisheeth Venkat', 'Sohum Waduwani', 'Sai Divyesh Tunguturu']
-# players.sort(key=functools.cmp_to_key(bfs_comp_val))
-# for player in players:
-#     print(player, win_count(player))
 
-bfs_comp('Nikhil Aadapu', 'Sairisheeth Venkat')
-
-# for p1 in players:
-#     for p2 in players:
-#         if p1 != p2:
-#             bfs_comp(p1, p2)
+def lb():
+    players = list(records.keys())
+    players.sort(key=functools.cmp_to_key(bfs_comp_val))
+    for player in players:
+        print(player, win_count(player))
 
 # Interactive program
 while True:
@@ -130,10 +124,7 @@ while True:
 
     # Print leaderboard
     if command == 'lb':
-        players = list(records.keys())
-        players.sort(reverse=True, key=lambda player : win_count(player))
-        for player in players:
-            print(player, win_count(player))
+        lb()
     
     # Print comparison between two players
     elif command == 'comp':
