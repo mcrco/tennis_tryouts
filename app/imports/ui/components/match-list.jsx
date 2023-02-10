@@ -1,20 +1,24 @@
 import React from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.js'
-import Autocomplete from './autocomp'
 
-export default function MatchTable() {
+export default function MatchList() {
     
     const matches = useTracker(() => MatchCollection.find().fetch())
 
-    const tableRows = matches.map(
+    const rows = matches.map(
         (match) => (
-            (<tr>
-                <td> {match.p1} </td>
-                <td> {match.p2} </td>
-                <td> {match.s1} </td>
-                <td> {match.s2} </td>
-            </tr>)
+            <div className='list-entry black-shadow rounded'>
+                <div className='list-entry-left' style={{'--color': match.s1 > match.s2 ? '#009879' : 'red'}}>
+                    {match.p1}
+                </div>
+                <div className='list-entry-center rounded'>
+                    {match.s1 + ' - ' + match.s2}
+                </div>
+                <div className='list-entry-right' style={{'--color': match.s1 > match.s2 ? 'red' : '#009879'}}>
+                    {match.p2}
+                </div>
+            </div>
         )
     )
     
@@ -45,20 +49,10 @@ export default function MatchTable() {
             </div>
         
             <div style={{height: '50px'}}></div>
-
-            <table className="styled-table black-shadow">
-                <thead>
-                    <tr>
-                        <th>Player 1</th>
-                        <th>Player 2</th>
-                        <th>Score 1</th>
-                        <th>Score 2</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tableRows}
-                </tbody>
-            </table>
+        
+            <div className='list'>
+                {rows}
+            </div>
         </div>
     )
 }

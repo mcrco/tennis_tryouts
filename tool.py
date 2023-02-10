@@ -75,7 +75,7 @@ def bfs_comp(p1, p2):
             for opp in opps:
                 comp(curr, opp)
                 curr = opp
-            print_rec(rec, opps[len(opps) - 1])
+            print_rec(rec, curr)
             break
 
         for next in records[rec.opponent]:
@@ -120,7 +120,6 @@ while True:
     args = str(line).split()
 
     command = args[0]
-    p1 = args[1] + ' ' + args[2]
 
     # Print leaderboard
     if command == 'lb':
@@ -128,6 +127,7 @@ while True:
     
     # Print comparison between two players
     elif command == 'comp':
+        p1 = args[1] + ' ' + args[2]
         p2 = args[3] + ' ' + args[4]
         
         # Number of wins
@@ -140,5 +140,6 @@ while True:
 
     # Print all records of player
     elif command == 'stat':
+        p1 = args[1] + ' ' + args[2]
         for rec in records[p1]:
             print_rec(rec, p1)
