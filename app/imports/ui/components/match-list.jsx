@@ -26,7 +26,7 @@ export default function MatchList() {
                 <div className='list-entry-center rounded horizontal-center'>
                     <div>{match.s1 + ' - ' + match.s2}</div> 
                     <div style={{height: '5px'}}></div>
-                    <div className='match-date'>{dateToString(match.date)}</div>
+                    <div className='list-entry-sub'>{dateToString(match.date)}</div>
                 </div>
                 <div className='list-entry-right rounded-right' style={{'--color': match.s1 > match.s2 ? 'var(--red)' : 'var(--green)'}}>
                     {match.p2}
@@ -47,6 +47,9 @@ export default function MatchList() {
         const s1 = document.getElementById('s1').value
         const s2 = document.getElementById('s2').value
         let date = document.getElementById('match-date').value
+        if (!p1 || !p2 || !s1 || !s2) {
+            return
+        }
         const today = new Date()
         if (dateToString(new Date(date)) == dateToString(today)) {
             date = today
@@ -75,14 +78,18 @@ export default function MatchList() {
         <div className='centered'> 
             <div className='row'>
                 <div id='match-input-container' className='row rounded-left grey-outline' style={{borderRight: 'none'}}>
-                    <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name'  />
+                    <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name'/>
                     <input className='row-element' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' />
-                    <input className='row-element' type='text' id='s1' name='s1-input' placeholder='Player 1 Score'/>
+                    <input className='row-element' style={{width: '9em'}} type='text' id='s1' name='s1-input' placeholder='Player 1 Score'/>
                     <input className='row-element' type='text' id='s2' name='s2-input' placeholder='Player 2 Score'/>
                     <input className='row-element' type='date' id='match-date' name='match-date-input' defaultValue={new Date()}/>
                 </div>
                 <button id='add-match' className='row-element rounded-right margin-right' style={{height: '52px'}} onClick={handleAddMatch}>Add Match</button>
+            </div>
 
+            <div style = {{width: '100%', height: '50px'}}></div>
+
+            <div className='row'>
                 <div id='match-search-container' className='row rounded grey-outline margin-right'>
                     <div className='vertical-center'>
                         <BiSearch className='row-element' style={{fontSize: '1.1em', color: 'grey'}}/>
@@ -92,7 +99,7 @@ export default function MatchList() {
                 <button id='reverse-sort-btn' className='row-element rounded margin-right' style={{fontSize: '1em'}} onClick={handleReverse}> <TbArrowsSort/> </button>
             </div>
         
-            <div style={{height: '80px'}}></div>
+            <div style={{width: '100%', height: '30px'}}></div>
         
             <div className='list'>
                 {rows}
