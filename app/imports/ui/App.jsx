@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import MatchList from './components/match-list'
 import Leaderboard from './components/leaderboard';
-import Comparison from './components/comparison';
+import Comparator from './components/comparator';
 import {GiTennisRacket} from 'react-icons/gi'
 import {BsList} from 'react-icons/bs'
 import {BsTrophy} from 'react-icons/bs'
@@ -21,20 +21,20 @@ export const App = () => {
         } else if (displayingLb) {
             return (<Leaderboard/>)
         } else if (displayingComp) {
-            return (<Comparison/>)
+            return (<Comparator/>)
         }
     }
 
     return (
       <div className=''>
 
-        <div className='vertical-center'>
-        </div>
+        {/* <div className='vertical-center'> */}
+        {/* </div> */}
 
-        <div className='vertical-center'>
-            <GiTennisRacket className='margin-right' style={{fontSize: '64px'}}/>
-            <h1> msj tennis </h1>
-        </div>
+        {/* <div className='vertical-center'> */}
+        {/*     <GiTennisRacket className='margin-right' style={{fontSize: '64px'}}/> */}
+        {/*     <h1> msj tennis </h1> */}
+        {/* </div> */}
 
         <div id="navbar-container">
             <div id="navbar" className="row rounded black-shadow vertical-center">

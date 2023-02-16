@@ -1,9 +1,13 @@
-import React, {useState} from 'react'
+import { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.js'
 import playerUtil from '../../util/player-util'
 
 export default function Leaderboard() {
+
+    const [searchedName, setSearchedName] = useState("")
+    const [sortReverse, setSortReverse] = useState(true)
+
 
     const matches = useTracker(() => MatchCollection.find().fetch())
     let players = []
@@ -17,14 +21,22 @@ export default function Leaderboard() {
     }
 
     const sortFn = (p1, p2) => {
-        return playerUtil.bfs_comp_val(p1, p2)
+        return (sortReverse ? -1 : 1) * playerUtil.bfs_comp_val(p1, p2)
     }
 
     players.sort(sortFn)
 
+    const handleSearch = (event) => {
+        setSearchedName(event.target.value)
+    }
+
+    const handleReverse = () => {
+        setSortReverse(!sortReverse)
+    }
+
     const rows = players.map(
-        (player) => (
-            <div className='list-entry black-shadow rounded' style={{width: '60%'}}>
+        (player) => player.includes(searchedName) ? (
+            <div className='list-entry black-shadow rounded' style={{width: '60%'}} key={'Rank ' + players.indexOf(player)}>
                 <div className='list-entry-name'>
                     {player}
                 </div>
@@ -41,13 +53,27 @@ export default function Leaderboard() {
                     </div>
                 </div>
             </div>
-        )
+        ) : ''
     )
 
-    console.log(rows)
-    
     return (
         <div className='centered'> 
+            <h1> Leaderboard </h1>
+
+            <div style={{height: '50px', width: '100%'}} />
+
+            <div className='row'>
+                <div id='match-search-container' className='row rounded grey-outline margin-right'>
+                    <div className='vertical-center'>
+                        <BiSearch className='row-element' style={{fontSize: '1.1em', color: 'grey'}}/>
+                        <input className='row-element rounded' type='text' id='player-search' name='player-search' onChange={handleSearch} placeholder="Search for player's matches"/>
+                    </div>
+                </div>
+                <button id='reverse-sort-btn' className='row-element rounded margin-right' style={{fontSize: '1em'}} onClick={handleReverse}> <TbArrowsSort/> </button>
+            </div>
+
+            <div style={{width: '100%', height: '30px'}}></div>
+
             <div className='list'>
                 {rows}
             </div>

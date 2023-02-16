@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import playerUtil from '../../util/player-util'
 
-export default function Comparison() {
+export default function Comparator() {
 
     const [player1, setP1] = useState()
     const [player2, setP2] = useState()
@@ -11,6 +11,7 @@ export default function Comparison() {
     }
 
     const paths = playerUtil.bfs_comp(player1, player2)
+
     console.log(paths)
 
     let listEntryLists = []
@@ -35,8 +36,6 @@ export default function Comparison() {
         )
     }
 
-    console.log(listEntryLists)
-
     let lists = listEntryLists.map((list) => (
         <div className='list'>
             {list}
@@ -53,8 +52,10 @@ export default function Comparison() {
 
     return (
         <div className='centered'> 
+            <h1> Comparator </h1>
+            <div style={{height: '50px', width: '100%'}} />
             <div className='row'>
-                <div className='row grey-outline rounded'>
+                <div className='row grey-outline'>
                     <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name' onChange={handleP1Search}/>
                     <input className='row-element rounded-right' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' onChange={handleP2Search}/>
                 </div>

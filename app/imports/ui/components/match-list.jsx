@@ -13,6 +13,12 @@ export default function MatchList() {
 
     const matches = all_matches.filter(match => match.p1.includes(searchedName)|| match.p2.includes(searchedName))
 
+    const sortFn = (m1, m2) => {
+        (sortReverse ? -1 : 1) * new Date(m1.date) - new Date(m2.date)
+    }
+
+    matches.sort(sortFn)
+
     const dateToString = (date) => {
         return new Date(date).toLocaleString('en-US', {dateStyle: 'medium'}) 
     }
@@ -34,12 +40,6 @@ export default function MatchList() {
             </div>
         )
     )
-
-    const sortFn = (m1, m2) => {
-        sortReverse ? new Date(m2.date) - new Date(m1.date) : new Date(m1.date) - new Date(m2.date)
-    }
-
-    rows.sort(sortFn)
     
     const handleAddMatch = () => {
         const p1 = document.getElementById('p1').value
@@ -76,6 +76,8 @@ export default function MatchList() {
 
     return (
         <div className='centered'> 
+            <h1> Match List </h1>
+            <div style={{height: '50px', width: '100%'}} />
             <div className='row'>
                 <div id='match-input-container' className='row rounded-left grey-outline' style={{borderRight: 'none'}}>
                     <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name'/>

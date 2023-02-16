@@ -20,6 +20,8 @@ export default class playerUtil {
                 didWin = match.s2 > match.s1
                 p_score = match.s2
                 opp_score = match.s1
+            } else {
+                continue
             }
 
             const res = didWin ? 'win' : 'loss'
@@ -28,7 +30,8 @@ export default class playerUtil {
                 opponent: opp,
                 result: res,
                 p_score: p_score,
-                opp_score: opp_score
+                opp_score: opp_score,
+                date: match.date,
             })
         }
         
@@ -72,31 +75,27 @@ export default class playerUtil {
         while (q.length > 0) {
             const pair = q.shift()
             const rec = pair.record
-            const matches = pair.matches
+            const opps = pair.opps
             
             if (visited.includes(rec.opponent)) 
                 continue
             visited.push(rec.opponent)
 
-            const match = {
-                p1: rec.player,
-                p2: rec.opponent,
-                s1: rec.p_score,
-                s2: rec.opp_score
-            }
-            let new_matches = matches.concat(matches, [{match}])
+            let new_opps = matches.concat(opps, [rec.opponent])
             
             if (rec.opponent == p2) {
-                if (paths.length == 0 || paths[0].length >= new_matches.length) {
-                    paths.push(new_matches)
+                if (paths.length == 0 || paths[0].length >= new_opps.length) {
+                    paths.push(new_opps)
                 }
             }
             
             for (let next of this.recordsOf(rec.opponent)) {
                 if (next.result == rec.result) 
-                    q.push({record: next, new_matches})
+                    q.push({record: next, ops : new_opps})
             }
         }
+
+
 
         return paths
     }
