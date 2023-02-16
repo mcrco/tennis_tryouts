@@ -6,14 +6,17 @@ export default class playerUtil {
         const matches = MatchCollection.find().fetch()
         const recs = []
         for (let match of matches) {
+            let opp = ''
             let didWin = false
             let p_score = -1
             let opp_score = -1
             if (match.p1 == player) {
+                opp = match.p2
                 didWin = match.s1 > match.s2
                 p_score = match.s1
                 opp_score = match.s2
             } else if (match.p2 == player) {
+                opp = match.p1
                 didWin = match.s2 > match.s1
                 p_score = match.s2
                 opp_score = match.s1
@@ -21,7 +24,8 @@ export default class playerUtil {
 
             const res = didWin ? 'win' : 'loss'
             recs.push({
-                opponent: match.p2,
+                player: player,
+                opponent: opp,
                 result: res,
                 p_score: p_score,
                 opp_score: opp_score
@@ -59,32 +63,42 @@ export default class playerUtil {
     static bfs_comp(p1, p2) {
         const q = []
         for (let rec of this.recordsOf(p1)) {
-            q.push({record: rec, opps: []})
+            q.push({record: rec, matches: []})
         }
         
+        let paths = []
         let visited = []
 
         while (q.length > 0) {
             const pair = q.shift()
             const rec = pair.record
-            const opps = pair.opps
+            const matches = pair.matches
             
             if (visited.includes(rec.opponent)) 
                 continue
             visited.push(rec.opponent)
-            let new_opps = opps.concat(opps, [rec.opponent])
+
+            const match = {
+                p1: rec.player,
+                p2: rec.opponent,
+                s1: rec.p_score,
+                s2: rec.opp_score
+            }
+            let new_matches = matches.concat(matches, [{match}])
             
             if (rec.opponent == p2) {
-                return new_opps
+                if (paths.length == 0 || paths[0].length >= new_matches.length) {
+                    paths.push(new_matches)
+                }
             }
             
             for (let next of this.recordsOf(rec.opponent)) {
                 if (next.result == rec.result) 
-                    q.push({record: next, new_opps})
+                    q.push({record: next, new_matches})
             }
         }
 
-        return -1
+        return paths
     }
 
     static bfs_comp_val(p1, p2) {
@@ -111,7 +125,7 @@ export default class playerUtil {
             
             for (let next of this.recordsOf(rec.opponent)) {
                 if (next.result == rec.result) 
-                    q.push({record: next, new_opps})
+                    q.push({record: next, opps: new_opps})
             }
         }
         

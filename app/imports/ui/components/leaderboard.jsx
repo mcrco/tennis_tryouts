@@ -21,7 +21,6 @@ export default function Leaderboard() {
     }
 
     players.sort(sortFn)
-    console.log(players)
 
     const rows = players.map(
         (player) => (
