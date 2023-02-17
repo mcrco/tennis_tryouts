@@ -10,14 +10,16 @@ export default function Comparator() {
         return new Date(date).toLocaleString('en-US', {dateStyle: 'medium'}) 
     }
 
-    const paths = playerUtil.bfs_comp(player1, player2)
+    let matchChains = []
 
-    console.log(paths)
+    if (playerUtil.hasPlayer(player1) && playerUtil.hasPlayer(player2)) {
+        matchChains = playerUtil.bfs_comp(player1, player2)
+    }
 
-    let listEntryLists = []
-    for (const path of paths) {
-        listEntryLists.push(
-            path.map((match) => (
+    let chainLists = []
+    for (const chain of matchChains) {
+        chainLists.push(
+            chain.map((match) => (
                 <div className='list-entry black-shadow rounded'>
                     <div className='list-entry-left rounded-left' style={{'--color': match.s1 > match.s2 ? 'var(--green)' : 'var(--red)'}}>
                         {match.p1}
@@ -36,8 +38,8 @@ export default function Comparator() {
         )
     }
 
-    let lists = listEntryLists.map((list) => (
-        <div className='list'>
+    let lists = chainLists.map((list) => (
+        <div className='list' style={{paddingBottom: '20px', borderBottom: '1px dotted grey'}}>
             {list}
         </div>
     ))
@@ -55,7 +57,7 @@ export default function Comparator() {
             <h1> Comparator </h1>
             <div style={{height: '50px', width: '100%'}} />
             <div className='row'>
-                <div className='row grey-outline'>
+                <div id='comp-search' className='row grey-outline rounded'>
                     <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name' onChange={handleP1Search}/>
                     <input className='row-element rounded-right' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' onChange={handleP2Search}/>
                 </div>

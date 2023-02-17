@@ -3,18 +3,20 @@ import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.js'
 import {BiSearch} from 'react-icons/bi'
 import {TbArrowsSort} from 'react-icons/tb'
+import {GrClose} from 'react-icons/gr'
 
 export default function MatchList() {
 
     const [searchedName, setSearchedName] = useState("")
     const [sortReverse, setSortReverse] = useState(true)
+    const [hoveredMatch, setHovered] = useState("")
 
     const all_matches = useTracker(() => MatchCollection.find().fetch())
 
     const matches = all_matches.filter(match => match.p1.includes(searchedName)|| match.p2.includes(searchedName))
 
     const sortFn = (m1, m2) => {
-        (sortReverse ? -1 : 1) * new Date(m1.date) - new Date(m2.date)
+        return (sortReverse ? -1 : 1) * (new Date(m1.date) - new Date(m2.date))
     }
 
     matches.sort(sortFn)
@@ -23,9 +25,24 @@ export default function MatchList() {
         return new Date(date).toLocaleString('en-US', {dateStyle: 'medium'}) 
     }
 
-    const rows = matches.map(
-        (match) => (
-            <div className='list-entry black-shadow rounded'>
+    const mapMatchToListEntry = (match) => {
+        const handleMouseLeave = () => setHovered("")
+        const handleClick = () => MatchCollection.remove(match._id)
+        if (match._id == hoveredMatch) {
+            return (
+                <div className='list-entry black-shadow rounded' onMouseLeave={handleMouseLeave} style={{background: 'var(--accent)'}}>
+                    <div className='list-entry-left' />
+                    <div className='list-entry-center rounded horizontal-center' onClick={handleClick} style={{color: 'white'}}>
+                        Delete Match
+                    </div>
+                    <div className='list-entry-right' />
+                </div>
+            )
+        }
+
+        const handleMouseEnter = () => setHovered(match._id)
+        return (
+            <div className='list-entry black-shadow rounded' onMouseEnter={handleMouseEnter}>
                 <div className='list-entry-left rounded-left' style={{'--color': match.s1 > match.s2 ? 'var(--green)' : 'var(--red)'}}>
                     {match.p1}
                 </div>
@@ -39,6 +56,10 @@ export default function MatchList() {
                 </div>
             </div>
         )
+    }
+
+    const rows = matches.map(
+        mapMatchToListEntry
     )
     
     const handleAddMatch = () => {
@@ -93,9 +114,9 @@ export default function MatchList() {
 
             <div className='row'>
                 <div id='match-search-container' className='row rounded grey-outline margin-right'>
-                    <div className='vertical-center'>
+                    <div id='player-search' className='vertical-center'>
                         <BiSearch className='row-element' style={{fontSize: '1.1em', color: 'grey'}}/>
-                        <input className='row-element rounded' type='text' id='player-search' name='player-search' onChange={handleSearch} placeholder="Search for player's matches"/>
+                        <input className='row-element rounded' type='text' name='player-search' onChange={handleSearch} placeholder="Search for player's matches"/>
                     </div>
                 </div>
                 <button id='reverse-sort-btn' className='row-element rounded margin-right' style={{fontSize: '1em'}} onClick={handleReverse}> <TbArrowsSort/> </button>
@@ -103,7 +124,7 @@ export default function MatchList() {
         
             <div style={{width: '100%', height: '30px'}}></div>
         
-            <div className='list'>
+            <div id='match-list' className='list'>
                 {rows}
             </div>
         </div>

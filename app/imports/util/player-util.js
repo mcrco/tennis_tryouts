@@ -38,6 +38,10 @@ export default class playerUtil {
         return recs
     }
 
+    static hasPlayer(player) {
+        return this.recordsOf(player).length > 0
+    }
+
     static win_count(player) {
         let count = 0
         for (let rec of this.recordsOf(player)) {
@@ -53,23 +57,29 @@ export default class playerUtil {
     }
 
     static comp(p1, p2) {
-        const recs = []
-        for (let rec of this.recordsOf(p1)) {
+        const matches = []
+        for (const rec of this.recordsOf(p1)) {
             if (rec.opponent == p2) {
-                recs.push(rec)
+                matches.push({
+                    p1: p1,
+                    p2: rec.opponent,
+                    s1: rec.p_score,
+                    s2: rec.opp_score,
+                    date: rec.date
+                })
             }
         }
         
-        return recs
+        return matches
     }
 
     static bfs_comp(p1, p2) {
         const q = []
         for (let rec of this.recordsOf(p1)) {
-            q.push({record: rec, matches: []})
+            q.push({record: rec, opps: []})
         }
         
-        let paths = []
+        let oppChains = []
         let visited = []
 
         while (q.length > 0) {
@@ -81,23 +91,33 @@ export default class playerUtil {
                 continue
             visited.push(rec.opponent)
 
-            let new_opps = matches.concat(opps, [rec.opponent])
+            let new_opps = opps.concat([rec.opponent])
             
             if (rec.opponent == p2) {
-                if (paths.length == 0 || paths[0].length >= new_opps.length) {
-                    paths.push(new_opps)
+                if (oppChains.length == 0 || oppChains[0].length >= new_opps.length) {
+                    oppChains.push(new_opps)
+                    continue
                 }
             }
             
             for (let next of this.recordsOf(rec.opponent)) {
                 if (next.result == rec.result) 
-                    q.push({record: next, ops : new_opps})
+                    q.push({record: next, opps : new_opps})
             }
         }
 
+        let matchChains = []
+        for (const chain of oppChains) {
+            let matchChain = []
+            let curr = p1
+            for (const opp of chain) {
+                matchChain = matchChain.concat(this.comp(curr, opp))
+                curr = opp
+            }
+            matchChains.push(matchChain)
+        }
 
-
-        return paths
+        return matchChains
     }
 
     static bfs_comp_val(p1, p2) {
@@ -116,7 +136,7 @@ export default class playerUtil {
             if (visited.includes(rec.opponent)) 
                 continue
             visited.push(rec.opponent)
-            let new_opps = opps.concat(opps, [rec.opponent])
+            let new_opps = opps.concat([rec.opponent])
             
             if (rec.opponent == p2) {
                 return rec.result == 'win' ? -1 : 1

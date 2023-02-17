@@ -82,9 +82,9 @@ h1 {
   transition: transform 0.5ms;
 }
 
-.list-entry:hover {
-    transform: scale(1.03);
-}
+/* .list-entry:hover { */
+/*     transform: scale(1.03); */
+/* } */
 
 .list-entry-left {
   width: 40%;
@@ -115,6 +115,7 @@ h1 {
   width: 20%;
   text-align: center;
   color: black;
+  cursor: pointer;
 }
 
 .list-entry-name {
@@ -270,6 +271,17 @@ h1 {
 
 #add-match {
     border: 1px var(--accent) solid;
+}
+
+#comp-search input {
+    padding-left: 30px;
+    border-right: 1px dotted grey;
+    width: 12em;
+}
+
+#player-search {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 input[type="date"] {
