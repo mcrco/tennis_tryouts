@@ -44,8 +44,19 @@ export default function Comparator(props) {
     }
 
     let lists = chainLists.map((list) => (
-        <div className='list' style={{paddingBottom: '20px', borderBottom: '1px dotted grey'}}>
-            {list}
+        <div style={{width: '100%'}}>
+            <h2> {list.length} Degrees </h2>
+            <div className='list rounded margin-bottom' style={{paddingBottom: '20px', border: '1px dotted grey'}}>
+                {list}
+                {list.length % 2 == 1 ?
+                    <div className='list-entry rounded'>
+                        <div className='list-entry-left rounded-left'/>
+                        <div className='list-entry-center rounded horizontal-center'/>
+                        <div className='list-entry-right rounded-right'/>
+                    </div> :
+                    <div/>
+                }
+            </div>
         </div>
     ))
 
@@ -69,7 +80,6 @@ export default function Comparator(props) {
             </div>
 
             <div style={{width: '100%', height: '30px'}}></div>
-        
             {lists}
         </div>
     )

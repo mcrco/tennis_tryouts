@@ -59,6 +59,10 @@ h1 {
   font-weight: normal;
 }
 
+h2 {
+    font-weight: normal;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -93,6 +97,8 @@ h1 {
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .list-entry {
@@ -283,7 +289,7 @@ h1 {
 #session-input-container input {
     padding-left: 30px;
     border-right: 1px solid var(--grey);
-    width: 10em;
+    width: 12em;
 }
 
 #match-input-container input {

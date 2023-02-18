@@ -124,8 +124,16 @@ export default function MatchList(props) {
         
             <div style={{width: '100%', height: '30px'}}></div>
         
-            <div id='match-list' className='list'>
+            <div id='match-list' className='list rounded margin-bottom'>
                 {rows}
+                {rows.length % 2 == 1 ?
+                    <div className='list-entry rounded'>
+                        <div className='list-entry-left rounded-left'/>
+                        <div className='list-entry-center rounded horizontal-center'/>
+                        <div className='list-entry-right rounded-right'/>
+                    </div> :
+                    <div/>
+                }
             </div>
         </div>
     )
