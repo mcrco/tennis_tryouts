@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.js'
-import playerUtil from '../../util/player-util'
+import PlayerUtil from '../../util/player-util'
 import {BiSearch} from 'react-icons/bi'
 import {TbArrowsSort} from 'react-icons/tb'
 
-export default function Leaderboard() {
+export default function Leaderboard(props) {
 
     const [searchedName, setSearchedName] = useState("")
     const [sortReverse, setSortReverse] = useState(false)
 
-
-    const matches = useTracker(() => MatchCollection.find().fetch())
+    const matches = useTracker(() => MatchCollection.find({sessionId: props.sessionId}).fetch())
+    const playerUtil = new PlayerUtil(matches)
     let players = []
     for (const match of matches) {
         if (!players.includes(match.p1)) {
@@ -65,13 +65,13 @@ export default function Leaderboard() {
             <div style={{height: '50px', width: '100%'}} />
 
             <div className='row'>
-                <div id='match-search-container' className='row rounded grey-outline margin-right'>
+                <div id='match-search-container' className='row rounded margin-right'>
                     <div id='player-search' className='vertical-center'>
                         <BiSearch className='row-element' style={{fontSize: '1.1em', color: 'grey'}}/>
                         <input className='row-element rounded' type='text' name='player-search' onChange={handleSearch} placeholder="Search for player"/>
                     </div>
                 </div>
-                <button id='reverse-sort-btn' className='row-element rounded margin-right' style={{fontSize: '1em'}} onClick={handleReverse}> <TbArrowsSort/> </button>
+                <button id='reverse-sort-btn' className='row-element rounded' style={{fontSize: '1em', height: '50px'}} onClick={handleReverse}> <TbArrowsSort/> </button>
             </div>
 
             <div style={{width: '100%', height: '30px'}}></div>

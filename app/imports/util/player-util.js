@@ -1,9 +1,11 @@
-import { MatchCollection } from '/imports/api/collections.js'
+export default class PlayerUtil {
 
-export default class playerUtil {
+    constructor(matches) {
+        this.matches = matches
+    }
 
-    static recordsOf(player) {
-        const matches = MatchCollection.find().fetch()
+    recordsOf(player) {
+        const matches = this.matches
         const recs = []
         for (let match of matches) {
             let opp = ''
@@ -38,11 +40,11 @@ export default class playerUtil {
         return recs
     }
 
-    static hasPlayer(player) {
+    hasPlayer(player) {
         return this.recordsOf(player).length > 0
     }
 
-    static win_count(player) {
+    win_count(player) {
         let count = 0
         for (let rec of this.recordsOf(player)) {
             if (rec.result == 'win') {
@@ -52,11 +54,11 @@ export default class playerUtil {
         return count
     }
 
-    static recToString(rec, player) {
+    recToString(rec, player) {
         return player + rec.result == win ? " beat " : " lost to " + rec.opponent + " " + rec.p_score + "-" + rec.opp_score
     }
 
-    static comp(p1, p2) {
+    comp(p1, p2) {
         const matches = []
         for (const rec of this.recordsOf(p1)) {
             if (rec.opponent == p2) {
@@ -73,7 +75,7 @@ export default class playerUtil {
         return matches
     }
 
-    static bfs_comp(p1, p2) {
+    bfs_comp(p1, p2) {
         const q = []
         for (let rec of this.recordsOf(p1)) {
             q.push({record: rec, opps: []})
@@ -120,7 +122,7 @@ export default class playerUtil {
         return matchChains
     }
 
-    static bfs_comp_val(p1, p2) {
+    bfs_comp_val(p1, p2) {
         const q = []
         for (let rec of this.recordsOf(p1)) {
             q.push({record: rec, opps: []})
@@ -151,8 +153,8 @@ export default class playerUtil {
         return this.win_count(p2) - this.win_count(p1)
     }
 
-    static lb() {
-        const matches = MatchCollection.find().fetch() 
+    lb() {
+        const matches = this.matches
         let players = []
         for (let match in matches) {
             if (!players.includes(match.p1))

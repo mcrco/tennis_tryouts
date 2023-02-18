@@ -1,10 +1,15 @@
 import React, {useState} from 'react'
-import playerUtil from '../../util/player-util'
+import { useTracker } from 'meteor/react-meteor-data'
+import { MatchCollection } from '/imports/api/collections.js'
+import PlayerUtil from '../../util/player-util'
 
-export default function Comparator() {
+export default function Comparator(props) {
 
     const [player1, setP1] = useState()
     const [player2, setP2] = useState()
+
+    const matches = useTracker(() => MatchCollection.find({sessionId: props.sessionId}).fetch())
+    const playerUtil = new PlayerUtil(matches)
 
     const dateToString = (date) => {
         return new Date(date).toLocaleString('en-US', {dateStyle: 'medium'}) 
@@ -57,9 +62,9 @@ export default function Comparator() {
             <h1> Comparator </h1>
             <div style={{height: '50px', width: '100%'}} />
             <div className='row'>
-                <div id='comp-search' className='row grey-outline rounded'>
+                <div id='comp-search' className='row rounded'>
                     <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name' onChange={handleP1Search}/>
-                    <input className='row-element rounded-right' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' onChange={handleP2Search}/>
+                    <input className='row-element rounded-right' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' onChange={handleP2Search} style={{border: 'none'}}/>
                 </div>
             </div>
 

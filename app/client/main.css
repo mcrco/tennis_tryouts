@@ -5,6 +5,8 @@
     --green-shadow: rgba(95, 167, 119, 0.2);
     --red: #ff6962dd;
     --accent: #91a5ff;
+    --grey: #E3E3E3;
+    --light-grey: #F3F3F3;
 }
 
 body {
@@ -20,6 +22,30 @@ body {
     text-align: left;
     top: 20px;
     left: 20px;
+}
+
+/* #session-selector-container { */
+/*     position: fixed; */
+/*     text-align: left; */
+/*     height: 50px; */
+/*     top: 28px; */
+/*     left: 30px; */
+/* } */
+
+#session-select {
+    height: 50px;
+    margin: 0;
+    padding-left: 20px;
+    padding-right: 30px;
+    background-color: var(--accent);
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-right: 16px solid transparent
+}
+#session-select:hover {
+  box-shadow: 0 0 10px 1px var(--accent);
+  transition: box-shadow 0.2s;
 }
 
 img {
@@ -254,13 +280,15 @@ h1 {
     margin-bottom: 10px;
 }
 
-#match-input-container {
-  background: linear-gradient(90deg, rgba(255,255,255,1) 79%, rgba(10,121,9,1) 85%, rgba(95,167,119,1) 100%); 
+#session-input-container input {
+    padding-left: 30px;
+    border-right: 1px solid var(--grey);
+    width: 10em;
 }
 
 #match-input-container input {
     padding-left: 30px;
-    border-right: 1px dotted grey;
+    border-right: 1px solid var(--grey);
     width: 12em;
 }
 
@@ -269,13 +297,9 @@ h1 {
     width: 10em;
 }
 
-#add-match {
-    border: 1px var(--accent) solid;
-}
-
 #comp-search input {
     padding-left: 30px;
-    border-right: 1px dotted grey;
+    border-right: 1px solid var(--grey);
     width: 12em;
 }
 
@@ -305,6 +329,7 @@ input[type="date"] {
   flex-direction: row;
   justify-content: center;
   padding-left: 10px;
+  background-color: var(--light-grey);
 }
 
 #reverse-sort-btn {
@@ -318,6 +343,7 @@ input {
   padding-left: 10px;
   font-size: 1em;
   outline: none;
+  background-color: var(--light-grey);
 }
 
 .rounded {
@@ -338,10 +364,6 @@ input {
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.1);
 }
 
-.grey-outline {
-    border: 1px darkgrey solid;
-}
-
 button {
   border: none;
   padding: 0.6em 1.2em;
@@ -356,11 +378,6 @@ button:hover {
   transition: box-shadow 0.2s;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 #navbar-container {
     width: auto;
     display: inline-block;
@@ -370,6 +387,7 @@ button:focus-visible {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: var(--light-grey);
 }
 
 .nav-element {
@@ -381,4 +399,5 @@ button:focus-visible {
     cursor: pointer;
     line-height: 0;
     height: 50px;
+    background-color: var(--light-grey);
 }
