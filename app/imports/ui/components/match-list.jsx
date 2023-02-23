@@ -119,7 +119,7 @@ export default function MatchList(props) {
                     <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name'/>
                     <input className='row-element' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' />
                     <input className='row-element' style={{width: '9em'}} type='text' id='s1' name='s1-input' placeholder='Player 1 Score'/>
-                    <input className='row-element' type='text' id='s2' name='s2-input' placeholder='Player 2 Score'/>
+                    <input className='row-element' style={{width: '9em'}} type='text' id='s2' name='s2-input' placeholder='Player 2 Score'/>
                     <input className='row-element' type='date' id='match-date' name='match-date-input' defaultValue={new Date()}/>
                 </div>
                 <button id='add-match' className='row-element rounded-right' onClick={handleAddMatch}>Add Match</button>
