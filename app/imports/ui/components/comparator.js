@@ -5,8 +5,8 @@ import PlayerUtil from '../../util/player-util'
 
 export default function Comparator(props) {
 
-    const [player1, setP1] = useState()
-    const [player2, setP2] = useState()
+    const [player1, setP1] = useState('!')
+    const [player2, setP2] = useState('!')
 
     const matches = useTracker(() => MatchCollection.find({sessionId: props.sessionId}).fetch())
     const playerUtil = new PlayerUtil(matches)
@@ -17,8 +17,26 @@ export default function Comparator(props) {
 
     let matchChains = []
 
-    if (playerUtil.hasPlayer(player1) && playerUtil.hasPlayer(player2)) {
-        matchChains = playerUtil.bfs_comp(player1, player2)
+    let p1 = player1.toLowerCase().trim()
+    let p2 = player2.toLowerCase().trim()
+    let p1_words = p1.split(' ')
+    if (p1 != '') {
+        for (let i = 0; i < p1_words.length; i++) {
+            p1_words[i] = p1_words[i][0].toUpperCase() + p1_words[i].substring(1)
+        }
+    }
+    p1 = p1_words.join(' ')
+
+    let p2_words = p2.split(' ')
+    if (p2 != '') {
+        for (let i = 0; i < p2_words.length; i++) {
+            p2_words[i] = p2_words[i][0].toUpperCase() + p2_words[i].substring(1)
+        }
+    }
+    p2 = p2_words.join(' ')
+
+    if (playerUtil.hasPlayer(p1) && playerUtil.hasPlayer(p2)) {
+        matchChains = playerUtil.bfs_comp(p1, p2)
     }
 
     let chainLists = []

@@ -62,8 +62,8 @@ export default function MatchList(props) {
     )
     
     const handleAddMatch = () => {
-        const p1 = document.getElementById('p1').value
-        const p2 = document.getElementById('p2').value
+        let p1 = document.getElementById('p1').value
+        let p2 = document.getElementById('p2').value
         const s1 = document.getElementById('s1').value
         const s2 = document.getElementById('s2').value
         let date = document.getElementById('match-date').value
@@ -75,6 +75,21 @@ export default function MatchList(props) {
             date = today
         }
         
+        p1 = p1.trim().toLowerCase()
+        p2 = p2.trim().toLowerCase()
+
+        let p1_words = p1.split(' ')
+        for (let i = 0; i < p1_words.length; i++) {
+            p1_words[i] = p1_words[i][0].toUpperCase() + p1_words[i].substring(1)
+        }
+        p1 = p1_words.join(' ')
+
+        let p2_words = p2.split(' ')
+        for (let i = 0; i < p2_words.length; i++) {
+            p2_words[i] = p2_words[i][0].toUpperCase() + p2_words[i].substring(1)
+        }
+        p2 = p2_words.join(' ')
+
         const new_rec = {
             p1: p1,
             p2: p2,

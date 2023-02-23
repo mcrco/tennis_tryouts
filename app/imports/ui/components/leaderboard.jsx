@@ -37,7 +37,7 @@ export default function Leaderboard(props) {
     }
 
     const rows = players.map(
-        (player) => player.includes(searchedName) ? (
+        (player) => player.toLowerCase().includes(searchedName.toLowerCase()) ? (
             <div className='list-entry black-shadow rounded' style={{width: '60%'}} key={'Rank ' + sortReverse ? (players.length - players.indexOf(player)) : players.indexOf(player)}>
                 <div className='list-entry-name'>
                     {player}
