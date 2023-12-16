@@ -81,10 +81,10 @@ export default function MatchList(props) {
                                 <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s11-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s11} />
                                 </div>
-                                <div className='border-r border-gray-200 w-1/12'>
+                                <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s12-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s12} />
                                 </div>
-                                <div className='border-r border-gray-200 w-1/12'>
+                                <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s13-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s13} />
                                 </div>
                                 <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => handleEditMatch()}>
@@ -201,10 +201,10 @@ export default function MatchList(props) {
                             <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s11' className='bg-gray-100 w-3 text-center' />
                             </div>
-                            <div className='border-r border-gray-200 w-1/12'>
+                            <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s12' className='bg-gray-100 w-3 text-center' />
                             </div>
-                            <div className='border-r border-gray-200 w-1/12'>
+                            <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s13' className='bg-gray-100 w-3 text-center' />
                             </div>
                             <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => handleAddMatch()}>
