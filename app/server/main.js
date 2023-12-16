@@ -1,15 +1,16 @@
 import { Meteor } from 'meteor/meteor';
 import { MatchCollection } from '/imports/api/collections.js'
-
-const insertMatch = rec => MatchCollection.insert(rec)
+import { SessionCollection } from '../imports/api/collections';
+import { PlayerCollection } from '../imports/api/collections';
 
 Meteor.startup(() => {
-    if (MatchCollection.find().count() == 0) {
-        insertMatch({
-            p1: 'Marco',
-            p2: 'Shrish',
-            s1: 7,
-            s2: 5
-        })
+    const SEED_USERNAME = 'admin'
+    const SEED_PASSWORD = 'password'
+
+    if (!Accounts.findUserByUsername(SEED_USERNAME)) {
+        Accounts.createUser({
+            username: SEED_USERNAME,
+            password: SEED_PASSWORD,
+        });
     }
 });

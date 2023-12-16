@@ -1,105 +1,246 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.js'
-import {BiSearch} from 'react-icons/bi'
-import {TbArrowsSort} from 'react-icons/tb'
+import { BiCheck, BiEdit, BiX, BiPlus, BiPlusCircle, BiSearch, BiTrash } from 'react-icons/bi'
 
 export default function MatchList(props) {
 
-    const [searchedName, setSearchedName] = useState("")
-    const [sortReverse, setSortReverse] = useState(true)
-    const [hoveredMatch, setHovered] = useState("")
+    const [searchedName, setSearchedName] = useState('');
+    const [sortReverse, setSortReverse] = useState(true);
+    const [addMatchState, setAddMatchState] = useState(false);
+    const [hoveredMatch, setHoveredMatch] = useState('');
+    const [matchToEdit, setMatchToEdit] = useState('');
 
-    const all_matches = useTracker(() => MatchCollection.find({sessionId: props.sessionId}).fetch())
-
-    const matches = all_matches.filter(match => match.p1.includes(searchedName)|| match.p2.includes(searchedName))
+    const allMatches = useTracker(() => MatchCollection.find({ sessionId: props.sessionId }).fetch());
+    const searchedMatches = allMatches.filter(match => match.p1.toLowerCase().includes(searchedName.toLowerCase()) || match.p2.toLowerCase().includes(searchedName.toLowerCase()));
 
     const sortFn = (m1, m2) => {
         return (sortReverse ? -1 : 1) * (new Date(m1.date) - new Date(m2.date))
-    }
+    };
+    searchedMatches.sort(sortFn);
 
-    matches.sort(sortFn)
+    const renderMatches = () => {
+        if (searchedMatches.length == 0) {
+            return <></>
+        }
 
-    const dateToString = (date) => {
-        return new Date(date).toLocaleString('en-US', {dateStyle: 'medium'}) 
-    }
+        const dateToString = (date) => {
+            return new Date(date).toLocaleString('en-US', { dateStyle: 'medium' })
+        }
 
-    const mapMatchToListEntry = (match) => {
-        const handleMouseLeave = () => setHovered("")
-        const handleClick = () => MatchCollection.remove(match._id)
-        if (match._id == hoveredMatch) {
-            return (
-                <div className='list-entry black-shadow rounded' onMouseLeave={handleMouseLeave} style={{background: 'var(--accent)'}}>
-                    <div className='list-entry-left' />
-                    <div className='list-entry-center rounded horizontal-center' onClick={handleClick} style={{color: 'white'}}>
-                        Delete Match
+        const matchesByDate = [];
+        const dates = [];
+        let currDate = dateToString(searchedMatches[0].date)
+        let start = 0;
+        while (start < searchedMatches.length) {
+            dates.push(currDate);
+
+            let end = start;
+            while (end < searchedMatches.length && dateToString(searchedMatches[end].date) == currDate) {
+                end++;
+            }
+
+            matchesByDate.push(searchedMatches.slice(start, end))
+            if (end < searchedMatches.length) {
+                currDate = dateToString(searchedMatches[end].date)
+            }
+            start = end;
+        }
+
+        const matchContent = [];
+        for (let i = 0; i < dates.length; i++) {
+            const mapMatch = (match) => {
+                if (match._id == matchToEdit) {
+                    const handleEditMatch = () => {
+                        let p1 = document.getElementById('p1-edit').value
+                        let p2 = document.getElementById('p2-edit').value
+                        const s1 = [document.getElementById('s11-edit').value, document.getElementById('s12-edit').value, document.getElementById('s13-edit').value]
+                        const s2 = [document.getElementById('s21-edit').value, document.getElementById('s22-edit').value, document.getElementById('s23-edit').value]
+                        if (!p1 || !p2 || !s1 || !s2) {
+                            return
+                        }
+
+                        const editedMatch = {
+                            p1: p1,
+                            p2: p2,
+                            s1: s1,
+                            s2: s2,
+                            date: new match.date,
+                            sessionId: props.sessionId
+                        }
+
+                        MatchCollection.update({ _id: match._id }, editedMatch)
+                        setMatchToEdit('')
+                    }
+                    return (
+                        <div className='rounded-lg bg-gray-100'>
+                            <div className='flex flex-row border-b border-gray-200'>
+                                <div className='w-7/12 border-r border-gray-200'>
+                                    <input id='p1-edit' className='p-4 border-r border-gray-200 bg-gray-100 rounded-lg' defaultValue={match.p1} />
+                                </div>
+                                <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                    <input id='s11-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s11} />
+                                </div>
+                                <div className='border-r border-gray-200 w-1/12'>
+                                    <input id='s12-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s12} />
+                                </div>
+                                <div className='border-r border-gray-200 w-1/12'>
+                                    <input id='s13-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s13} />
+                                </div>
+                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => handleEditMatch()}>
+                                    <BiCheck className='text-xl text-gray-400 hover:text-green-500 transition-colors' />
+                                </button>
+                            </div>
+                            <div className='flex flex-row'>
+                                <div className='w-7/12 border-r border-gray-200'>
+                                    <input id='p2-edit' className='rounded-lg p-4 bg-gray-100' defaultValue={match.p2} />
+                                </div>
+                                <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                    <input id='s21-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s21} />
+                                </div>
+                                <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                    <input id='s22-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s22} />
+                                </div>
+                                <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                    <input id='s23-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s23} />
+                                </div>
+                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => setMatchToEdit('')}>
+                                    <BiX className='text-xl text-gray-400 hover:text-red-500 transition-colors' />
+                                </button>
+                            </div>
+                        </div>
+                    )
+                } else if (match._id == hoveredMatch && props.ownerLoggedIn) {
+                    const handleDeleteMatch = () => MatchCollection.remove({ _id: match._id })
+                    return (
+                        <div className='rounded-lg bg-gray-100 flex flex-row justify-center items-center space-x-4' onMouseLeave={() => setHoveredMatch('')}>
+                            <button className='rounded-lg p-4' onClick={() => setMatchToEdit(match._id)}>
+                                <BiEdit className='text-gray-400 hover:text-black transition-colors text-2xl' />
+                            </button>
+                            <button className='rounded-lg p-4' onClick={handleDeleteMatch}>
+                                <BiTrash className=' text-gray-400 hover:text-red-500 transition-colors text-2xl' />
+                            </button>
+                        </div>
+                    );
+                } else {
+                    let wins = 0;
+                    let losses = 0;
+                    for (let i of [0, 1, 2]) {
+                        if (match.s1[i] > match.s2[i])
+                            wins++;
+                        else if (match.s1[i] < match.s2[i])
+                            losses++;
+                    }
+                    const p1Win = wins > losses;
+                    return (
+                        <div className='rounded-lg bg-gray-100' onMouseEnter={() => setHoveredMatch(match._id)}>
+                            <div className='flex flex-row border-b border-gray-200'>
+                                <div className={'p-4 w-5/8 border-r border-gray-200 ' + (p1Win ? 'font-semibold' : '')}> {match.p1} </div>
+                                <div className={'py-4 w-1/8 border-r border-gray-200 text-center ' + (match.s1[0] > match.s2[0] ? 'font-semibold' : '')}> {match.s1[0]} </div>
+                                <div className={'py-4 w-1/8 border-r border-gray-200 text-center ' + (match.s1[1] > match.s2[1] ? 'font-semibold' : '')}> {match.s1[1]} </div>
+                                <div className={'py-4 w-1/8 text-center ' + (match.s1[2] > match.s2[2] ? 'font-semibold' : '')}> {match.s1[2]} </div>
+                            </div>
+                            <div className='flex flex-row'>
+                                <div className={'p-4 w-5/8 border-r border-gray-200 ' + (!p1Win ? 'font-semibold' : '')}> {match.p2} </div>
+                                <div className={'py-4 w-1/8 border-r border-gray-200 text-center ' + (match.s1[0] < match.s2[0] ? 'font-semibold' : '')}> {match.s2[0]} </div>
+                                <div className={'py-4 w-1/8 border-r border-gray-200 text-center ' + (match.s1[1] < match.s2[1] ? 'font-semibold' : '')}> {match.s2[1]} </div>
+                                <div className={'py-4 w-1/8 text-center ' + (match.s1[2] < match.s2[2] ? 'font-semibold' : '')}> {match.s2[2]} </div>
+                            </div>
+                        </div>
+                    )
+                }
+            }
+            matchContent.push(
+                <div className='w-full space-y-5'>
+                    <div className='text-center text-gray-400'>
+                        {dates[i]}
                     </div>
-                    <div className='list-entry-right' />
+
+                    <div className='grid grid-cols-3 gap-4'>
+                        {matchesByDate[i].map(mapMatch)}
+                    </div>
+                </div>
+            );
+        }
+
+        return matchContent;
+    }
+
+
+    const addMatchTile = () => {
+        const handleAddMatch = () => {
+            let p1 = document.getElementById('p1').value
+            let p2 = document.getElementById('p2').value
+            const s1 = [document.getElementById('s11').value, document.getElementById('s12').value, document.getElementById('s13').value]
+            const s2 = [document.getElementById('s21').value, document.getElementById('s22').value, document.getElementById('s23').value]
+            if (!p1 || !p2 || !s1 || !s2) {
+                return
+            }
+
+            const new_rec = {
+                p1: p1,
+                p2: p2,
+                s1: s1,
+                s2: s2,
+                date: new Date(),
+                sessionId: props.sessionId
+            }
+
+            MatchCollection.insert(new_rec)
+            setAddMatchState(false)
+        }
+
+        if (addMatchState) {
+            return (
+                <div className='grid grid-cols-3 gap-4'>
+                    <div className='rounded-lg bg-gray-100'>
+                        <div className='flex flex-row border-b border-gray-200'>
+                            <div className='w-7/12 border-r border-gray-200'>
+                                <input id='p1' className='p-4 border-r border-gray-200 bg-gray-100 rounded-lg' placeholder='Player name' />
+                            </div>
+                            <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                <input id='s11' className='bg-gray-100 w-3 text-center' />
+                            </div>
+                            <div className='border-r border-gray-200 w-1/12'>
+                                <input id='s12' className='bg-gray-100 w-3 text-center' />
+                            </div>
+                            <div className='border-r border-gray-200 w-1/12'>
+                                <input id='s13' className='bg-gray-100 w-3 text-center' />
+                            </div>
+                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => handleAddMatch()}>
+                                <BiPlus className='text-xl text-gray-400 hover:text-green-500 transition-colors' />
+                            </button>
+                        </div>
+                        <div className='flex flex-row'>
+                            <div className='w-7/12 border-r border-gray-200'>
+                                <input id='p2' className='rounded-lg p-4 bg-gray-100' placeholder='Player name' />
+                            </div>
+                            <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                <input id='s21' className='bg-gray-100 w-3 text-center' />
+                            </div>
+                            <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                <input id='s22' className='bg-gray-100 w-3 text-center' />
+                            </div>
+                            <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
+                                <input id='s23' className='bg-gray-100 w-3 text-center' />
+                            </div>
+                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => setAddMatchState(false)}>
+                                <BiX className='text-xl text-gray-400 hover:text-red-500 transition-colors' />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className='grid grid-cols-3 gap-4 h-28'>
+                    <div className='rounded-lg border-dotted border-2 border-gray-200 hover:border-black flex items-center justify-center cursor-pointer text-3xl text-gray-300 hover:text-black transition-colors'
+                        style={{ height: '' }} onClick={() => setAddMatchState(true)}>
+                        <BiPlusCircle className='text' />
+                    </div>
                 </div>
             )
         }
-
-        const handleMouseEnter = () => setHovered(match._id)
-        return (
-            <div className='list-entry black-shadow rounded' onMouseEnter={handleMouseEnter}>
-                <div className='list-entry-left rounded-left' style={{'--color': match.s1 > match.s2 ? 'var(--green)' : 'var(--red)'}}>
-                    {match.p1}
-                </div>
-                <div className='list-entry-center rounded horizontal-center'>
-                    <div>{match.s1 + ' - ' + match.s2}</div> 
-                    <div style={{height: '5px'}}></div>
-                    <div className='list-entry-sub'>{dateToString(match.date)}</div>
-                </div>
-                <div className='list-entry-right rounded-right' style={{'--color': match.s1 > match.s2 ? 'var(--red)' : 'var(--green)'}}>
-                    {match.p2}
-                </div>
-            </div>
-        )
-    }
-
-    const rows = matches.map(
-        mapMatchToListEntry
-    )
-    
-    const handleAddMatch = () => {
-        let p1 = document.getElementById('p1').value
-        let p2 = document.getElementById('p2').value
-        const s1 = document.getElementById('s1').value
-        const s2 = document.getElementById('s2').value
-        let date = document.getElementById('match-date').value
-        if (!p1 || !p2 || !s1 || !s2) {
-            return
-        }
-        const today = new Date()
-        if (dateToString(new Date(date)) == dateToString(today)) {
-            date = today
-        }
-        
-        p1 = p1.trim().toLowerCase()
-        p2 = p2.trim().toLowerCase()
-
-        let p1_words = p1.split(' ')
-        for (let i = 0; i < p1_words.length; i++) {
-            p1_words[i] = p1_words[i][0].toUpperCase() + p1_words[i].substring(1)
-        }
-        p1 = p1_words.join(' ')
-
-        let p2_words = p2.split(' ')
-        for (let i = 0; i < p2_words.length; i++) {
-            p2_words[i] = p2_words[i][0].toUpperCase() + p2_words[i].substring(1)
-        }
-        p2 = p2_words.join(' ')
-
-        const new_rec = {
-            p1: p1,
-            p2: p2,
-            s1: s1,
-            s2: s2,
-            date: date,
-            sessionId: props.sessionId
-        }
-        
-        MatchCollection.insert(new_rec)
     }
 
     const handleSearch = (event) => {
@@ -111,45 +252,15 @@ export default function MatchList(props) {
     }
 
     return (
-        <div className='centered'> 
-            <h1> Match List </h1>
-            <div style={{height: '50px', width: '100%'}} />
-            <div className='row'>
-                <div id='match-input-container' className='row rounded-left' style={{borderRight: 'none'}}>
-                    <input className='row-element rounded-left' type='text' id='p1' name='p1-input' placeholder='Player 1 Name'/>
-                    <input className='row-element' type='text' id='p2' name='p2-input' placeholder='Player 2 Name' />
-                    <input className='row-element' style={{width: '9em'}} type='text' id='s1' name='s1-input' placeholder='Player 1 Score'/>
-                    <input className='row-element' style={{width: '9em'}} type='text' id='s2' name='s2-input' placeholder='Player 2 Score'/>
-                    <input className='row-element' type='date' id='match-date' name='match-date-input' defaultValue={new Date()}/>
-                </div>
-                <button id='add-match' className='row-element rounded-right' onClick={handleAddMatch}>Add Match</button>
+        <div className='flex flex-col space-y-8'>
+            <div className='flex flex-row justify-start items-center bg-gray-100 rounded-lg px-4 py-3 space-x-2 text-gray-400 w-72'>
+                <BiSearch />
+                <input className='bg-gray-100 text-gray-700' onChange={handleSearch} placeholder="Search for player" />
             </div>
 
-            <div style = {{width: '100%', height: '50px'}}></div>
+            {props.ownerLoggedIn && addMatchTile()}
 
-            <div className='row'>
-                <div id='match-search-container' className='row rounded margin-right'>
-                    <div id='player-search' className='vertical-center'>
-                        <BiSearch className='row-element' style={{fontSize: '1.1em', color: 'grey'}}/>
-                        <input className='row-element rounded' type='text' name='player-search' onChange={handleSearch} placeholder="Search for player's matches"/>
-                    </div>
-                </div>
-                <button id='reverse-sort-btn' className='row-element rounded margin-right' style={{fontSize: '16px', height: '50px'}} onClick={handleReverse}> <TbArrowsSort/> </button>
-            </div>
-        
-            <div style={{width: '100%', height: '30px'}}></div>
-        
-            <div id='match-list' className='list rounded margin-bottom'>
-                {rows}
-                {rows.length % 2 == 1 ?
-                    <div className='list-entry rounded'>
-                        <div className='list-entry-left rounded-left'/>
-                        <div className='list-entry-center rounded horizontal-center'/>
-                        <div className='list-entry-right rounded-right'/>
-                    </div> :
-                    <div/>
-                }
-            </div>
+            {renderMatches()}
         </div>
     )
 }

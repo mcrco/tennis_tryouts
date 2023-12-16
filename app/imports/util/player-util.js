@@ -8,20 +8,38 @@ export default class PlayerUtil {
         const matches = this.matches
         const recs = []
         for (let match of matches) {
-            let opp = ''
-            let didWin = false
-            let p_score = -1
-            let opp_score = -1
+            let opp = '';
+            let didWin = false;
+            let pScore = -1;
+            let oppScore = -1;
             if (match.p1 == player) {
-                opp = match.p2
-                didWin = match.s1 > match.s2
-                p_score = match.s1
-                opp_score = match.s2
+                opp = match.p2;
+                let setsWon = 0;
+                let setsLost = 0;
+                for (let i of [0, 1, 2]) {
+                    if (match.s1[i] > match.s2[i])
+                        setsWon++;
+                    else if (match.s1[i] < match.s2[i])
+                        setsLost++;
+                }
+
+                didWin = setsWon > setsLost
+                pScore = match.s1
+                oppScore = match.s2
             } else if (match.p2 == player) {
                 opp = match.p1
-                didWin = match.s2 > match.s1
-                p_score = match.s2
-                opp_score = match.s1
+                let setsWon = 0;
+                let setsLost = 0;
+                for (let i of [0, 1, 2]) {
+                    if (match.s2[i] > match.s1[i])
+                        setsWon++;
+                    else if (match.s2[i] < match.s1[i])
+                        setsLost++;
+                }
+
+                didWin = setsWon > setsLost;
+                pScore = match.s2;
+                oppScore = match.s1;
             } else {
                 continue
             }
@@ -31,12 +49,12 @@ export default class PlayerUtil {
                 player: player,
                 opponent: opp,
                 result: res,
-                p_score: p_score,
-                opp_score: opp_score,
+                pScore: pScore,
+                oppScore: oppScore,
                 date: match.date,
             })
         }
-        
+
         return recs
     }
 
@@ -44,113 +62,92 @@ export default class PlayerUtil {
         return this.recordsOf(player).length > 0
     }
 
-    win_count(player) {
+    getNumWins(player) {
         let count = 0
         for (let rec of this.recordsOf(player)) {
             if (rec.result == 'win') {
                 count += 1
             }
         }
-        return count
+        return count;
+    }
+
+    getNumLosses(player) {
+        return this.recordsOf(player).length - this.getNumWins(player);
     }
 
     recToString(rec, player) {
-        return player + rec.result == win ? " beat " : " lost to " + rec.opponent + " " + rec.p_score + "-" + rec.opp_score
+        return player + rec.result == 'win' ? " beat " : " lost to " + rec.opponent + " " + rec.pScore + "-" + rec.oppScore
     }
 
-    comp(p1, p2) {
+    getMatches(p1, p2) {
         const matches = []
         for (const rec of this.recordsOf(p1)) {
             if (rec.opponent == p2) {
                 matches.push({
                     p1: p1,
                     p2: rec.opponent,
-                    s1: rec.p_score,
-                    s2: rec.opp_score,
+                    s1: rec.pScore,
+                    s2: rec.oppScore,
                     date: rec.date
                 })
             }
         }
-        
+
         return matches
     }
 
-    bfs_comp(p1, p2) {
-        const q = []
+    getH2H(p1, p2) {
+        let wins = 0;
+        let losses = 0;
+
         for (let rec of this.recordsOf(p1)) {
-            q.push({record: rec, opps: []})
-        }
-        
-        let oppChains = []
-        let visited = []
-
-        while (q.length > 0) {
-            const pair = q.shift()
-            const rec = pair.record
-            const opps = pair.opps
-            
-            if (visited.includes(rec.opponent)) 
-                continue
-            visited.push(rec.opponent)
-
-            let new_opps = opps.concat([rec.opponent])
-            
             if (rec.opponent == p2) {
-                if (oppChains.length == 0 || oppChains[0].length >= new_opps.length) {
-                    oppChains.push(new_opps)
-                    continue
+                if (rec.result == 'win') {
+                    wins++;
+                } else {
+                    losses++;
                 }
             }
-            
-            for (let next of this.recordsOf(rec.opponent)) {
-                if (next.result == rec.result) 
-                    q.push({record: next, opps : new_opps})
-            }
         }
 
-        let matchChains = []
-        for (const chain of oppChains) {
-            let matchChain = []
-            let curr = p1
-            for (const opp of chain) {
-                matchChain = matchChain.concat(this.comp(curr, opp))
-                curr = opp
-            }
-            matchChains.push(matchChain)
-        }
-
-        return matchChains
+        return [wins, losses];
     }
 
-    bfs_comp_val(p1, p2) {
-        const q = []
-        for (let rec of this.recordsOf(p1)) {
-            q.push({record: rec, opps: []})
-        }
-        
-        let visited = []
+    getWinChain(p1, p2) {
+        const q = [[p1]];
+        const visited = []
 
         while (q.length > 0) {
-            const pair = q.shift()
-            const rec = pair.record
-            const opps = pair.opps
-            
-            if (visited.includes(rec.opponent)) 
-                continue
-            visited.push(rec.opponent)
-            let new_opps = opps.concat([rec.opponent])
-            
-            if (rec.opponent == p2) {
-                return rec.result == 'win' ? -1 : 1
+            const opps = q.shift();
+            const lastOpp = opps[opps.length - 1];
+
+            if (lastOpp == p2) {
+                return opps;
             }
-            
-            for (let next of this.recordsOf(rec.opponent)) {
-                if (next.result == rec.result) 
-                    q.push({record: next, opps: new_opps})
+
+            if (visited.includes(lastOpp))
+                continue;
+            visited.push(lastOpp)
+
+            for (let rec of this.recordsOf(lastOpp)) {
+                const h2h = this.getH2H(lastOpp, rec.opponent);
+                if (h2h[0] > h2h[1])
+                    q.push(opps.concat([rec.opponent]))
             }
         }
-        
-        return this.win_count(p2) - this.win_count(p1)
+
+        return [];
+    }
+
+    bfsCompare(p1, p2) {
+        const p1WinChain = this.getWinChain(p1, p2);
+        const p2WinChain = this.getWinChain(p2, p1);
+        if ((p1WinChain.length == 0) == (p2WinChain.length == 0)) {
+            return this.getNumWins(p2) - this.getNumWins(p1)
+        }
+
+        return p2WinChain.length - p1WinChain.length;
     }
 
     lb() {
@@ -162,7 +159,7 @@ export default class PlayerUtil {
             if (!players.includes(match.p2))
                 players.push(match.p2)
         }
-        
+
         players.sort(bfs_comp_val)
     }
 
