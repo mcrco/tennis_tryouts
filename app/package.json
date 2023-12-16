@@ -1,5 +1,5 @@
 {
-    "name": "app",
+    "name": "Tennis Ranker",
     "private": true,
     "scripts": {
         "start": "meteor run",
@@ -11,9 +11,11 @@
         "@babel/runtime": "^7.23.6",
         "bcrypt": "^5.1.1",
         "meteor-node-stubs": "^1.2.5",
+        "postcss": "^8.4.32",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react-icons": "^4.12.0"
+        "react-icons": "^4.12.0",
+        "tailwindcss": "^3.3.6"
     },
     "meteor": {
         "mainModule": {
@@ -24,8 +26,6 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.4.16",
-        "postcss": "^8.4.32",
-        "react-router-dom": "^6.20.1",
-        "tailwindcss": "^3.3.6"
+        "react-router-dom": "^6.20.1"
     }
 }
