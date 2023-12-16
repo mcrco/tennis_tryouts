@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data'
-import { Modal } from './components/modal';
+import { ErrorModal } from './components/modal';
 import { SessionCollection } from '../api/collections';
 
 export const SessionFinder = (props) => {
@@ -23,7 +23,7 @@ export const SessionFinder = (props) => {
                 onClick={handleClick}>
                 View Session
             </button>
-            <Modal visible={modalVisible} header={'Error'} body={'Session not found'} toggleVisible={() => setModalVisible(false)} />
+            <ErrorModal visible={modalVisible} header={'Error'} body={'Session not found'} toggleVisible={() => setModalVisible(false)} />
         </div >
     )
 }  

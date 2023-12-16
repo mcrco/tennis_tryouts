@@ -3,7 +3,7 @@ import { useTracker } from 'meteor/react-meteor-data'
 import React, { useState } from 'react';
 import { SessionCollection, MatchCollection } from '../api/collections';
 import { FaCheck, FaPlusCircle, FaTimes, FaTrash } from 'react-icons/fa';
-import { Modal } from './components/modal';
+import { ErrorModal } from './components/modal';
 import { SessionFinder } from './session-finder';
 import { TbLogout } from 'react-icons/tb';
 import { BiPlusCircle, BiTrash } from 'react-icons/bi';
@@ -29,7 +29,7 @@ export const Dashboard = (props) => {
             <div className='rounded-lg bg-gray-100 h-auto flex flex-col hover:scale-105 transition-transform cursor-pointer group' onClick={() => props.setSessionCode(session.code)}>
                 <div className='text-lg px-5 pt-4 pb-2 font-extrabold mb-3 border-b border-gray-200 flex flex-row justify-between items-center'>
                     <span>{session.name}</span>
-                    <div className='invisible group-hover:visible hover:text-red-500' onClick={() => deleteSession(session._id)}>
+                    <div className='invisible group-hover:visible hover:text-red-500' onClick={e => { e.stopPropagation(); deleteSession(session._id) }}>
                         <BiTrash />
                     </div>
                 </div>
@@ -100,10 +100,10 @@ export const Dashboard = (props) => {
         if (tabState == 'my') {
             return (
                 <div>
-                    <div className='grid grid-cols-4 gap-8'>
+                    <div className='grid grid-cols-3 gap-8'>
                         {sessionTiles}
                     </div>
-                    <Modal visible={addSessionError} header={'Error'} body={'Session join code already in use. Please try another.'} toggleVisible={() => setAddSessionError(false)} />
+                    <ErrorModal visible={addSessionError} header={'Error'} body={'Session join code already in use. Please try another.'} toggleVisible={() => setAddSessionError(false)} />
                 </div>
             );
         } else if (tabState == 'other') {
