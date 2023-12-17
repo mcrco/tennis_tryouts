@@ -15,6 +15,7 @@ export const LoginForm = () => {
         e.preventDefault();
 
         Accounts.createUser({ username: username, password: password });
+        Meteor.loginWithPassword(username, password);
     }
 
     return (
