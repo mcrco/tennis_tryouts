@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  padding-top: 10vh;
+padding-bottom: 10vh;
+  padding-left: 10vw;
+  padding-right: 10vw;
+  font-family: Inter;
+}
+
+#logo {
+    position: fixed;
+    text-align: left;
+    top: 20px;
+    left: 20px;
+}
+
+/* #session-selector-container { */
+/*     position: fixed; */
+/*     text-align: left; */
+/*     height: 50px; */
+/*     top: 28px; */
+/*     left: 30px; */
+/* } */
+
+img {
+    width: 64px;
+    height: auto;
+}
+
+h1 {
+  font-size: 64px;
+  font-weight: bold;
+
+}
+
+h2 {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+h3 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+input {
+  border: none;
+    outline: none;
+  outline: none;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.w-5\/8 {
+    width: 62.5%
+}
+
+.w-1\/8 {
+    width: 12.5%
+}
