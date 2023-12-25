@@ -24,7 +24,6 @@ export const App = () => {
 
     // Return login form if user isn't logged in
     else if (userId == null) {
-        console.log(userId)
         return (
             <div className='flex flex-col items-start space-y-8'>
                 <div className='w-full flex flex-row justify-between items-center'>
@@ -94,7 +93,6 @@ export const App = () => {
     }
 
     else {
-        console.log(userId);
         return (
             <div className='p-1'>
                 <Dashboard setSessionCode={setSessionCode} />

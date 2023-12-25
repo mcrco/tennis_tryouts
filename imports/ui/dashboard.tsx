@@ -18,14 +18,12 @@ export const Dashboard = (props: DashboardPropsType) => {
         return <></>;
     }
 
+    Meteor.subscribe('allSessions');
     const sessions = useTracker(() => SessionCollection.find().fetch());
     const userSessions = sessions.filter(session => session.owner == userId);
 
-    // Activated by clicking add session tile
     const [isAddingSession, setIsAddingSession] = useState(false);
-    // Used to render error modal for invalid session code on creation
     const [addSessionError, setAddSessionError] = useState(false);
-    // Used to render session tab vs session finder tab
     const [tabState, setTabState] = useState('my');
 
     const deleteSession = (sessionId: string) => SessionCollection.removeAsync({ _id: sessionId });
@@ -65,12 +63,12 @@ export const Dashboard = (props: DashboardPropsType) => {
                 return;
             }
 
-            SessionCollection.insert({
+            Meteor.call('insertSession', {
                 name: sessionName,
                 code: joinCode,
                 created: new Date(),
                 owner: userId
-            })
+            });
             setIsAddingSession(false);
         };
 

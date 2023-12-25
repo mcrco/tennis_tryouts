@@ -3,6 +3,7 @@ import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.ts'
 import CompUtil from '../../util/comp-util'
 import { BiSearch } from 'react-icons/bi';
+import { Meteor } from 'meteor/meteor';
 
 export type CompareProps = {
     sessionId: string;
@@ -13,6 +14,7 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
     const [p1, setP1] = useState('!');
     const [p2, setP2] = useState('!');
 
+    Meteor.subscribe('allMatches');
     const matches: MatchType[] = useTracker(() => MatchCollection.find({ sessionId: props.sessionId }).fetch() as MatchType[]);
     const compUtil = new CompUtil(matches);
 

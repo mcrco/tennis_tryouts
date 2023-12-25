@@ -17,14 +17,6 @@ padding-bottom: 10vh;
     left: 20px;
 }
 
-/* #session-selector-container { */
-/*     position: fixed; */
-/*     text-align: left; */
-/*     height: 50px; */
-/*     top: 28px; */
-/*     left: 30px; */
-/* } */
-
 img {
     width: 64px;
     height: auto;
@@ -54,6 +46,10 @@ input {
 
 textarea:focus, input:focus{
     outline: none;
+}
+
+a {
+    cursor: pointer;
 }
 
 .w-5\/8 {

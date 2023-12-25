@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.ts'
@@ -17,6 +18,7 @@ export const Leaderboard = (props: LeaderboardProps) => {
     const [sortWinsReverse, setSortWinsReverse] = useState(false)
     const [sortLossesReverse, setSortLossesReverse] = useState(false)
 
+    Meteor.subscribe('allMatches');
     const matches = useTracker(() => MatchCollection.find({ sessionId: props.sessionId }).fetch() as MatchType[])
     const compUtil = new CompUtil(matches)
     let players: string[] = []

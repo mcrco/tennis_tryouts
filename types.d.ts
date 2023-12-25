@@ -16,3 +16,10 @@ type RecordType = {
     date: Date;
 }
 
+type SessionType = {
+    _id: string;
+    name: string;
+    owner: string;
+    code: string;
+    created: Date;
+}

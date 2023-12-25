@@ -13,14 +13,17 @@ export type SessionViewProps = {
 }
 
 export const SessionView: React.FC<SessionViewProps> = (props) => {
-    const [tabState, setTabState] = useState('matchlist')
+    const [tabState, setTabState] = useState('matchlist');
     const userId = useTracker(() => Meteor.userId());
 
     // Load session
-    const session = useTracker(() => SessionCollection.find({ code: props.sessionCode }).fetch()[0])
-    if (session == undefined) props.setSessionCode('')
+    Meteor.subscribe('allSessions');
+    const session = useTracker(() => SessionCollection.findOne({ code: props.sessionCode }));
+    if (session == undefined) {
+        props.setSessionCode('');
+    }
 
-    const sessionId = session._id
+    const sessionId = session._id;
     const ownerLoggedIn = userId != null && session.owner == userId;
 
     const matchListProps: MatchListProps = {
@@ -30,11 +33,11 @@ export const SessionView: React.FC<SessionViewProps> = (props) => {
 
     const leaderboardProps: LeaderboardProps = {
         sessionId: sessionId
-    }
+    };
 
     const compareProps: CompareProps = {
         sessionId: sessionId
-    }
+    };
 
     return (
         <div>

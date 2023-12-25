@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
 import { useTracker } from 'meteor/react-meteor-data'
 import { ErrorModal } from './components/modal';
@@ -9,6 +10,8 @@ export type SessionFinderProps = {
 
 export const SessionFinder = (props: SessionFinderProps) => {
     const [modalVisible, setModalVisible] = useState(false);
+
+    Meteor.subscribe('allSessions');
     const sessions = useTracker(() => SessionCollection.find().fetch());
 
     const handleClick = (e: React.MouseEvent) => {

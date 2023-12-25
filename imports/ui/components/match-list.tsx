@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.ts'
@@ -14,6 +15,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
     const [hoveredMatch, setHoveredMatch] = useState('');
     const [matchToEdit, setMatchToEdit] = useState('');
 
+    Meteor.subscribe('allMatches');
     const allMatches = useTracker(() => MatchCollection.find({ sessionId: props.sessionId }).fetch() as MatchType[]);
     const nameIncludes = (str1: string, str2: string) => str1.toLowerCase().includes(str2.toLowerCase());
     const searchedMatches = allMatches.filter(match =>

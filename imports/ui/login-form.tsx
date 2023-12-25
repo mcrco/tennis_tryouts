@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Accounts } from 'meteor/accounts-base';
 
 export const LoginForm = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState('');
     const [createAccError, setCreateAccError] = useState('');
@@ -11,45 +11,45 @@ export const LoginForm = () => {
     const handleLogIn = (e: React.MouseEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const callback = (err?: Error) => {
-            if (err != null) {
+        const callback = (err?: Meteor.Error | Error) => {
+            if (err != null && err instanceof Meteor.Error) {
                 setCreateAccError('');
-                setLoginError(err.message);
+                setLoginError(err.reason as string);
             }
         }
 
-        Meteor.loginWithPassword(username, password, callback);
+        Meteor.loginWithPassword({ email: email }, password, callback);
     };
 
     const handleCreateAccount = (e: React.MouseEvent) => {
         e.preventDefault();
 
-        const callback = (err?: Error) => {
-            if (err != null) {
+        const callback = (err?: Meteor.Error | Error) => {
+            if (err != null && err instanceof Meteor.Error) {
                 setLoginError('');
-                setCreateAccError(err.message);
+                setCreateAccError(err.reason as string);
             } else {
-                Meteor.loginWithPassword(username, password);
+                Meteor.loginWithPassword(email, password);
             }
         }
 
-        Accounts.createUser({ username: username, password: password }, callback);
+        Meteor.call('createUserAccount', { email: email, password: password });
     }
 
-    // const handleForgotPassword = (e: React.MouseEvent) => {
-    //     e.preventDefault();
-    //     Accounts.forgotPassword({email: username});
-    // }
+    const handleForgotPassword = (e: React.MouseEvent) => {
+        e.preventDefault();
+        Accounts.forgotPassword({ email: email });
+    }
 
     return (
         <form onSubmit={handleLogIn} className="flex flex-col space-y-4 justify-center items-center rounded-lg shadow-md p-4 bg-gray-100">
             <input
                 type="text"
-                placeholder="Username"
+                placeholder="Email"
                 className='px-4 py-3 bg-white rounded-lg w-full'
-                name="username"
+                name="email"
                 required
-                onChange={e => setUsername(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
             />
 
             <input
@@ -63,7 +63,7 @@ export const LoginForm = () => {
 
             {(loginError != '') &&
                 <span className={'text-red-500 text-sm'}>
-                    {loginError}
+                    {loginError}. <a onClick={handleForgotPassword}> Forgot password? </a>
                 </span>
             }
 
