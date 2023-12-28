@@ -23,7 +23,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
     );
 
     const sortFn = (m1: MatchType, m2: MatchType) => {
-        return new Date(m1.date).getTime() - new Date(m2.date).getTime();
+        return new Date(m2.date).getTime() - new Date(m1.date).getTime();
     }
     searchedMatches.sort(sortFn);
 

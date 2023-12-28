@@ -40,7 +40,7 @@ export const Dashboard = (props: DashboardPropsType) => {
                 </div>
                 <div className='px-5 pt-2 pb-4'>
                     <p>
-                        Join Code: {session.code}
+                        View Code: {session.code}
                     </p>
                     <p>
                         Created: {session.created == undefined ? '' : session.created.toLocaleDateString('en-US', { dateStyle: 'medium' })}
@@ -57,15 +57,15 @@ export const Dashboard = (props: DashboardPropsType) => {
     if (isAddingSession) {
         const handleAddSession = () => {
             const sessionName = (document.getElementById('session-name-input') as HTMLInputElement).value;
-            const joinCode = (document.getElementById('join-code-input') as HTMLInputElement).value;
-            if (sessions.filter(session => session.code == joinCode).length != 0) {
+            const viewCode = (document.getElementById('view-code-input') as HTMLInputElement).value;
+            if (sessions.filter(session => session.code == viewCode).length != 0) {
                 setAddSessionError(true);
                 return;
             }
 
             Meteor.call('insertSession', {
                 name: sessionName,
-                code: joinCode,
+                code: viewCode,
                 created: new Date(),
                 owner: userId
             });
@@ -85,7 +85,7 @@ export const Dashboard = (props: DashboardPropsType) => {
                     </button>
                 </div>
                 <div className='flex flex-row space-x-2'>
-                    <input id='join-code-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='Join code' />
+                    <input id='view-code-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='View code' />
                     <button className='rounded-lg bg-white w-1/4 flex justify-center items-center text-gray-300 text-lg' onClick={() => handleCancelAddSession()}>
                         <BiX />
                     </button>
@@ -94,9 +94,9 @@ export const Dashboard = (props: DashboardPropsType) => {
         );
     } else {
         sessionTiles.push(
-            <div className='rounded-lg border-dotted border-2 h-auto flex items-center justify-center transition-colors cursor-pointer text-gray-200 text-3xl hover:text-black hover:border-black'
+            <div className='rounded-lg border-dotted border-2 h-auto flex items-center justify-center transition-colors cursor-pointer text-gray-200 text-3xl hover:text-black hover:border-black min-h-40'
                 onClick={() => setIsAddingSession(true)}>
-                <BiPlusCircle />
+                <BiPlusCircle /> <span className='text-xl'> &nbsp; Add Session (e.g. Tryouts 2023) </span>
             </div>
         )
     }
@@ -105,10 +105,10 @@ export const Dashboard = (props: DashboardPropsType) => {
         if (tabState == 'my') {
             return (
                 <div>
-                    <div className='grid grid-cols-3 gap-8'>
+                    <div className='grid grid-cols-3 gap-8 min-h-40'>
                         {sessionTiles}
                     </div>
-                    <ErrorModal visible={addSessionError} header={'Error'} body={'Session join code already in use. Please try another.'} toggleVisible={() => setAddSessionError(false)} />
+                    <ErrorModal visible={addSessionError} header={'Error'} body={'Session view code already in use. Please try another.'} toggleVisible={() => setAddSessionError(false)} />
                 </div>
             );
         } else if (tabState == 'other') {

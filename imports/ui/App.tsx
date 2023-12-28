@@ -30,10 +30,12 @@ export const App = () => {
 
                     <h1> Tennis Ranker </h1>
                     <div className='flex flex-row space-x-4 h-12'>
-                        <button className='rounded-lg px-4 py-2 bg-green-500 text-white font-bold hover:shadow-md transition-shadow' onClick={() => setShowLoginModal(true)}>
+                        <button className='rounded-lg px-4 py-2 bg-green-200 border border-transparent text-green-500 font-bold hover:shadow-md hover:border-green-400 transition-all'
+                            onClick={() => setShowLoginModal(true)}>
                             Log In
                         </button>
-                        <button className='rounded-lg px-4 py-2 bg-green-500 text-white font-bold hover:shadow-md transition-shadow' onClick={() => setShowSessionFinderModal(true)}>
+                        <button className='rounded-lg px-4 py-2 bg-green-200 border border-transparent text-green-500 font-bold hover:shadow-md hover:border-green-400 transition-all'
+                            onClick={() => setShowSessionFinderModal(true)}>
                             View Session
                         </button>
                     </div>
@@ -48,9 +50,9 @@ export const App = () => {
                     <h2> Features </h2>
                     <div className='flex flex-col items-center border rounded-3xl border-gray-200 bg-gray-100'>
                         <div className='flex flex-row justify-between items-start p-12 border-b border-gray-200'>
-                            <div className='w-1/2 text-left'>
+                            <div className='w-1/3 text-left'>
                                 <h3 className='mb-4'> Coach Dashboard </h3>
-                                Manage multiple sessions for different ocassions, share results with others.
+                                Manage multiple sessions for different occasions (e.g. different tryouts), share results with others.
                             </div>
                             <div className='p-8 border border-gray-200 rounded-lg shadow-lg w-1/2 bg-white'>
                                 <img src='sessions.png' className='w-full' />
@@ -86,8 +88,16 @@ export const App = () => {
                     </div>
                 </div>
 
-                <PopupModal visible={showLoginModal} body={<LoginForm />} toggleVisible={() => setShowLoginModal(false)} />
-                <PopupModal visible={showSessionFinderModal} body={<SessionFinder setSessionCode={setSessionCode} />} toggleVisible={() => setShowSessionFinderModal(false)} />
+                <PopupModal
+                    visible={showLoginModal}
+                    body={<LoginForm />}
+                    toggleVisible={() => setShowLoginModal(false)}
+                />
+                <PopupModal
+                    visible={showSessionFinderModal}
+                    body={<SessionFinder setSessionCode={setSessionCode} />}
+                    toggleVisible={() => setShowSessionFinderModal(false)}
+                />
             </div>
         )
     }
