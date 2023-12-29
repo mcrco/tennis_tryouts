@@ -1,4 +1,6 @@
 .DS_Store
+deploy.sh
+run.sh
 
 # Logs
 logs
