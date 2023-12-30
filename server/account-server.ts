@@ -6,8 +6,9 @@ Accounts.config({
 })
 
 Meteor.methods({
-    async createUserAccount(options) {
-        await Accounts.createUserVerifyingEmail(options);
+    async createUserAccount(options, callback) {
+        let res = await Accounts.createUserVerifyingEmail(options);
+        callback(res);
     },
     sendVerificationEmail(email: string) {
         const user = Accounts.findUserByEmail(email);

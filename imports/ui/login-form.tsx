@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 import { Accounts } from 'meteor/accounts-base';
 
 export const LoginForm = () => {
-    // const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    // const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState('');
     const [createAccError, setCreateAccError] = useState('');
@@ -19,39 +19,47 @@ export const LoginForm = () => {
             }
         }
 
-        // Meteor.loginWithPassword({ email: email }, password, callback);
-        Meteor.loginWithPassword(username, password, callback);
+        Meteor.loginWithPassword({ email: email }, password, callback);
+        // Meteor.loginWithPassword(username, password, callback);
     };
 
     const handleCreateAccount = (e: React.MouseEvent) => {
         e.preventDefault();
-        // Meteor.call('createUserAccount', { email: email, password: password });
-        Accounts.createUser({ username: username, password: password });
+
+        const callback = (err?: Meteor.Error | Error) => {
+            if (err != null && err instanceof Meteor.Error) {
+                setCreateAccError(err.reason as string);
+                setLoginError('');
+            }
+        }
+
+        Meteor.call('createUserAccount', { email: email, password: password }, callback);
+        // Accounts.createUser({ username: username, password: password });
     }
 
-    // const handleForgotPassword = (e: React.MouseEvent) => {
-    //     e.preventDefault();
-    //     Meteor.call('sendPasswordResetEmail', email);
-    // }
+    const handleForgotPassword = (e: React.MouseEvent) => {
+        e.preventDefault();
+        Meteor.call('sendPasswordResetEmail', email);
+    }
 
     return (
         <form onSubmit={handleLogIn} className="flex flex-col space-y-4 justify-center items-center rounded-lg shadow-md p-4 bg-gray-100">
-            {/* <input */}
-            {/*     type="text" */}
-            {/*     placeholder="Email" */}
-            {/*     className='px-4 py-3 bg-white rounded-lg w-full' */}
-            {/*     name="email" */}
-            {/*     required */}
-            {/*     onChange={e => setEmail(e.target.value)} */}
-            {/* /> */}
             <input
                 type="text"
-                placeholder="Username"
+                placeholder="Email"
                 className='px-4 py-3 bg-white rounded-lg w-full'
-                name="username"
+                name="email"
                 required
-                onChange={e => setUsername(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
             />
+            {/* <input */}
+            {/*     type="text" */}
+            {/*     placeholder="Username" */}
+            {/*     className='px-4 py-3 bg-white rounded-lg w-full' */}
+            {/*     name="username" */}
+            {/*     required */}
+            {/*     onChange={e => setUsername(e.target.value)} */}
+            {/* /> */}
 
             <input
                 type="password"
@@ -64,7 +72,7 @@ export const LoginForm = () => {
 
             {(loginError != '') &&
                 <span className={'text-red-500 text-sm'}>
-                    {loginError}. {/* <a onClick={handleForgotPassword}> Forgot password? </a> */}
+                    {loginError}. <a onClick={handleForgotPassword}> Forgot password? </a>
                 </span>
             }
 
