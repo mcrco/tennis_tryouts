@@ -3,7 +3,9 @@ import { Accounts } from 'meteor/accounts-base';
 
 Accounts.config({
     sendVerificationEmail: true,
-})
+});
+
+Accounts.emailTemplates.from = 'Tennis Ranker <support@tennisranker.us>';
 
 Meteor.methods({
     async createUserAccount(options, callback) {

@@ -3,6 +3,7 @@ deploy.sh
 run.sh
 settings.json
 run.sh
+.deploy
 
 # Logs
 logs
