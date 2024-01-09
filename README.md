@@ -1,1 +1,1 @@
-Live @ tennis.meteorapp.com
+Live @ [tennis.meteorapp.com](tennis.meteorapp.com)!
