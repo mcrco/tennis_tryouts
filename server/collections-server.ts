@@ -23,4 +23,3 @@ Meteor.publish('allMatches', () => {
 Meteor.publish('allSessions', () => {
     return SessionCollection.find();
 })
-

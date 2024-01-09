@@ -1,13 +1,12 @@
 import { Meteor } from 'meteor/meteor';
 import React, { useState } from 'react';
-import { Accounts } from 'meteor/accounts-base';
 
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
-    // const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loginError, setLoginError] = useState('');
     const [createAccError, setCreateAccError] = useState('');
+    const [createAccSuccess, setCreateAccSuccess] = useState(false);
 
     const handleLogIn = (e: React.MouseEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -16,30 +15,36 @@ export const LoginForm = () => {
             if (err != null && err instanceof Meteor.Error) {
                 setCreateAccError('');
                 setLoginError(err.reason as string);
+                setCreateAccSuccess(false);
             }
         }
 
         Meteor.loginWithPassword({ email: email }, password, callback);
-        // Meteor.loginWithPassword(username, password, callback);
     };
 
-    const handleCreateAccount = (e: React.MouseEvent) => {
+    const handleCreateAccount = async (e: React.MouseEvent) => {
         e.preventDefault();
 
-        const callback = (err?: Meteor.Error | Error) => {
-            if (err != null && err instanceof Meteor.Error) {
-                setCreateAccError(err.reason as string);
-                setLoginError('');
-            }
+        let res = await Meteor.callAsync('createUserAccount', { email: email, password: password });
+
+        if (res.error) {
+            console.log(res.message as string);
+            setCreateAccError(res.reason as string);
+            setLoginError('');
+            setCreateAccSuccess(false);
+        } else {
+            console.log('Account created');
+            setCreateAccSuccess(true);
+            setCreateAccError('');
+            setLoginError('');
         }
 
-        Meteor.call('createUserAccount', { email: email, password: password }, callback);
-        // Accounts.createUser({ username: username, password: password });
     }
 
     const handleForgotPassword = (e: React.MouseEvent) => {
         e.preventDefault();
         Meteor.call('sendPasswordResetEmail', email);
+        setLoginError('Password reset email sent')
     }
 
     return (
@@ -52,14 +57,6 @@ export const LoginForm = () => {
                 required
                 onChange={e => setEmail(e.target.value)}
             />
-            {/* <input */}
-            {/*     type="text" */}
-            {/*     placeholder="Username" */}
-            {/*     className='px-4 py-3 bg-white rounded-lg w-full' */}
-            {/*     name="username" */}
-            {/*     required */}
-            {/*     onChange={e => setUsername(e.target.value)} */}
-            {/* /> */}
 
             <input
                 type="password"
@@ -79,6 +76,12 @@ export const LoginForm = () => {
             {(createAccError != '') &&
                 <span className={'text-red-500 text-sm'}>
                     {createAccError}
+                </span>
+            }
+
+            {createAccSuccess &&
+                <span className={'text-green-500 text-sm'}>
+                    Verification email sent!
                 </span>
             }
 

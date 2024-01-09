@@ -10,7 +10,7 @@ type ErrorModalProps = {
 
 export const ErrorModal = (props: ErrorModalProps) => {
     return (
-        <div className={'fixed w-screen h-screen flex justify-center items-center top-0 left-0 bg-white/50 backdrop-blur-sm' + (props.visible ? ' visible' : ' invisible')}>
+        <div className={'fixed w-screen h-screen flex justify-center items-center top-0 left-0 bg-white/50 backdrop-blur-sm' + (props.visible ? '' : ' hidden')}>
             <div className={'bg-gray-100 w-96 h-52 flex flex-col justify-between items-center space-y-4 p-8 rounded-lg'}>
                 <IoWarningOutline className='text-red-500 text-8xl' />
                 <div className=''>
@@ -33,7 +33,7 @@ type PopupModalProps = {
 
 export const PopupModal = (props: PopupModalProps) => {
     return (
-        <div className={'fixed w-screen h-screen flex justify-center items-center top-0 left-0 bg-white/50 backdrop-blur-sm' + (props.visible ? ' visible' : ' invisible')}
+        <div className={'fixed w-screen h-screen flex justify-center items-center top-0 left-0 bg-white/50 backdrop-blur-sm' + (props.visible ? '' : ' hidden')}
             onClick={props.toggleVisible}
         >
             <div onClick={e => e.stopPropagation()}>
