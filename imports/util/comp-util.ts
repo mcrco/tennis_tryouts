@@ -1,73 +1,85 @@
-export default class CompUtil {
+class Match {
+    p1: string;
+    p2: string;
+    s1: number[];
+    s2: number[];
+    date: Date;
 
-    matches: MatchType[];
-
-    constructor(matches: MatchType[]) {
-        this.matches = matches
-    }
-
-    recordsOf(player: string) {
-        const matches = this.matches
-        const recs: RecordType[] = []
-        for (let match of matches) {
-            let opp: string;
-            let didWin: boolean = false;
-            let pScore: number[];
-            let oppScore: number[];
-            if (match.p1 == player) {
-                opp = match.p2;
-                let setsWon = 0;
-                let setsLost = 0;
-                for (let i of [0, 1, 2]) {
-                    if (match.s1[i] > match.s2[i])
-                        setsWon++;
-                    else if (match.s1[i] < match.s2[i])
-                        setsLost++;
-                }
-
-                didWin = setsWon > setsLost
-                pScore = match.s1
-                oppScore = match.s2
-            } else if (match.p2 == player) {
-                opp = match.p1
-                let setsWon = 0;
-                let setsLost = 0;
-                for (let i of [0, 1, 2]) {
-                    if (match.s2[i] > match.s1[i])
-                        setsWon++;
-                    else if (match.s2[i] < match.s1[i])
-                        setsLost++;
-                }
-
-                didWin = setsWon > setsLost;
-                pScore = match.s2;
-                oppScore = match.s1;
-            } else {
-                continue
-            }
-
-            const res = didWin ? 'win' : 'loss'
-            recs.push({
-                player: player,
-                opponent: opp,
-                result: res,
-                pScore: pScore,
-                oppScore: oppScore,
-                date: match.date,
-            })
-        }
-
-        return recs
+    constructor(p1: string, p2: string, s1: number[], s2: number[], date: Date) {
+        this.p1 = p1;
+        this.p2 = p2;
+        this.s1 = s1;
+        this.s2 = s2;
+        this.date = date;
     }
 
     hasPlayer(player: string) {
-        return this.recordsOf(player).length > 0
+        return player === this.p1 || player === this.p2;
+    }
+
+    getOpponent(player: string) {
+        return player === this.p1 ? this.p2 : this.p1;
+    }
+
+    getScore(player: string) {
+        if (player === this.p1)
+            return this.s1;
+        else if (player === this.p2)
+            return this.p2;
+        else
+            throw new Error('Player not in match');
+    }
+
+    getOppScore(player: string) {
+        if (player === this.p1)
+            return this.s2;
+        else if (player === this.p2)
+            return this.p1;
+        else
+            throw new Error('Player not in match');
+    }
+
+    getWinner() {
+        let setsWon = 0;
+        let setsLost = 0;
+        for (let i of [0, 1, 2]) {
+            if (this.s1[i] > this.s2[i])
+                setsWon++;
+            else if (this.s1[i] < this.s2[i])
+                setsLost++;
+        }
+        return setsWon > setsLost ? this.p1 : this.p2;
+    }
+}
+
+export default class CompUtil {
+
+    matches: Match[];
+    players: string[];
+
+    constructor(matches: MatchType[]) {
+        this.matches = matches.map(match => new Match(match.p1, match.p2, match.s1, match.s2, match.date));
+        this.players = [];
+        for (const match of matches) {
+            if (!this.players.includes(match.p1))
+                this.players.push(match.p1);
+            if (!this.players.includes(match.p2))
+                this.players.push(match.p2)
+        }
+    }
+
+    getMatches(player: string) {
+        return this.matches.filter(match => match.hasPlayer(player));
+    }
+
+    hasPlayer(player: string) {
+        return this.getMatches(player).length > 0;
     }
 
     getNumWins(player: string) {
         let count = 0;
-        for (let rec of this.recordsOf(player)) {
-            if (rec.result == 'win') {
+        for (let match of this.matches) {
+            if (match.getWinner() === player) {
                 count += 1;
             }
         }
@@ -75,37 +87,20 @@ export default class CompUtil {
     }
 
     getNumLosses(player: string) {
-        return this.recordsOf(player).length - this.getNumWins(player);
+        return this.getMatches(player).length - this.getNumWins(player);
     }
 
-    recToString(rec: RecordType, player: string) {
-        return player + rec.result == 'win' ? " beat " : " lost to " + rec.opponent + " " + rec.pScore + "-" + rec.oppScore
-    }
-
-    getMatches(p1: string, p2: string) {
-        const matches = []
-        for (const rec of this.recordsOf(p1)) {
-            if (rec.opponent == p2) {
-                matches.push({
-                    p1: p1,
-                    p2: rec.opponent,
-                    s1: rec.pScore,
-                    s2: rec.oppScore,
-                    date: rec.date
-                })
-            }
-        }
-
-        return matches
+    getMatchesBetween(p1: string, p2: string) {
+        return this.matches.filter(match => match.hasPlayer(p1) && match.hasPlayer(p2));
     }
 
     getH2H(p1: string, p2: string) {
         let wins = 0;
         let losses = 0;
 
-        for (let rec of this.recordsOf(p1)) {
-            if (rec.opponent == p2) {
-                if (rec.result == 'win') {
+        for (const match of this.getMatches(p1)) {
+            if (match.hasPlayer(p2)) {
+                if (match.getWinner() === p1) {
                     wins++;
                 } else {
                     losses++;
@@ -116,7 +111,32 @@ export default class CompUtil {
         return [wins, losses];
     }
 
-    getWinChain(p1: string, p2: string) {
+    existsH2HChain(p1: string, p2: string) {
+        const q: string[] = [p1];
+        const visited: string[] = [];
+
+        while (q.length > 0) {
+            const opp = q.shift()!;
+            if (opp == p2)
+                return true;
+
+            if (visited.includes(opp))
+                continue;
+            visited.push(opp);
+
+            for (const match of this.getMatches(opp)) {
+                const h2h = this.getH2H(opp, match.getOpponent(opp));
+                if (h2h[0] > h2h[1])
+                    q.push(match.getOpponent(opp));
+            }
+        }
+    }
+
+    existsLoop(p1: string, p2: string) {
+        return this.existsH2HChain(p1, p2) && this.existsH2HChain(p2, p1);
+    }
+
+    getValidH2HChain(p1: string, p2: string) {
         const q: string[][] = [[p1]];
         const visited: string[] = [];
 
@@ -132,23 +152,22 @@ export default class CompUtil {
                 continue;
             visited.push(lastOpp);
 
-            for (let rec of this.recordsOf(lastOpp)) {
-                const h2h = this.getH2H(lastOpp, rec.opponent);
+            for (const match of this.getMatches(lastOpp)) {
+                const nextOpp = match.getOpponent(lastOpp);
+                if (this.existsLoop(lastOpp, nextOpp))
+                    continue;
+                const h2h = this.getH2H(lastOpp, nextOpp);
                 if (h2h[0] > h2h[1])
-                    q.push(opps.concat([rec.opponent]));
+                    q.push(opps.concat([nextOpp]));
             }
         }
 
         return [];
     }
 
-    bfsCompare(p1: string, p2: string) {
-        const p1WinChain = this.getWinChain(p1, p2);
-        const p2WinChain = this.getWinChain(p2, p1);
-        if ((p1WinChain.length == 0) == (p2WinChain.length == 0)) {
+    compare(p1: string, p2: string) {
+        if (this.existsLoop(p1, p2))
             return this.getNumWins(p2) - this.getNumWins(p1);
-        }
-
-        return p2WinChain.length - p1WinChain.length;
+        return this.existsH2HChain(p1, p2) ? -1 : 1
     }
 }

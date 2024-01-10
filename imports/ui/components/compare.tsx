@@ -23,8 +23,7 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
 
     if (compUtil.hasPlayer(p1) && compUtil.hasPlayer(p2)) {
         recordStatement = (<span>
-            {p1}'s record is {compUtil.getNumWins(p1)}-{compUtil.getNumLosses(p1)}.
-            {p2}'s record is {compUtil.getNumWins(p2)}-{compUtil.getNumLosses(p2)}.
+            {p1}'s record is {compUtil.getNumWins(p1)}-{compUtil.getNumLosses(p1)}. {p2}'s record is {compUtil.getNumWins(p2)}-{compUtil.getNumLosses(p2)}.
         </span>);
 
         const h2hToMatches = (p1: string, p2: string, h2h: number[]) => {
@@ -70,8 +69,8 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
         if (h2h[0] != 0 || h2h[1] != 0) {
             comparison = h2hToMatches(p1, p2, h2h);
         } else {
-            const p1WinChain = compUtil.getWinChain(p1, p2);
-            const p2WinChain = compUtil.getWinChain(p2, p1);
+            const p1WinChain = compUtil.getValidH2HChain(p1, p2);
+            const p2WinChain = compUtil.getValidH2HChain(p2, p1);
 
             if (p1WinChain.length != 0 && p2WinChain.length != 0) {
                 const chain = p1WinChain.concat(p2WinChain.slice(1, p2WinChain.length));
@@ -134,12 +133,12 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
             <div className='flex flex-row justify-start items-center rounded-lg space-x-4'>
                 <div className='flex flex-row justify-start items-center rounded-lg text-gray-400 bg-gray-100 space-x-2 px-4 py-3 w-72'>
                     <BiSearch />
-                    <input className='bg-gray-100 rounded-lg text-gray-700' id='p1' name='p1-input' placeholder='Player Name' onChange={(e) => setP1(e.target.value)} />
+                    <input className='bg-gray-100 text-gray-700' id='p1' name='p1-input' placeholder='Player Name' onChange={(e) => setP1(e.target.value)} />
                 </div>
                 <span className='text-gray-400'> vs </span>
                 <div className='flex flex-row justify-start items-center rounded-lg text-gray-400 bg-gray-100 space-x-2 px-4 py-3 w-72'>
                     <BiSearch />
-                    <input className='bg-gray-100 rounded-lg text-gray-700' id='p2' name='p2-input' placeholder='Player Name' onChange={(e) => setP2(e.target.value)} />
+                    <input className='bg-gray-100 text-gray-700' id='p2' name='p2-input' placeholder='Player Name' onChange={(e) => setP2(e.target.value)} />
                 </div>
             </div>
 

@@ -32,12 +32,12 @@ export const Leaderboard = (props: LeaderboardProps) => {
     }
 
     const playersRanked = [...players];
-    playersRanked.sort((p1, p2) => compUtil.bfsCompare(p1, p2));
+    playersRanked.sort((p1, p2) => compUtil.compare(p1, p2));
     const ranks = [1];
     let currRank = 1;
     let currIndex = 1;
     while (currIndex < playersRanked.length) {
-        while (currIndex < playersRanked.length && compUtil.bfsCompare(playersRanked[currIndex], playersRanked[currIndex - 1]) == 0) {
+        while (currIndex < playersRanked.length && compUtil.compare(playersRanked[currIndex], playersRanked[currIndex - 1]) == 0) {
             ranks.push(currRank);
             currIndex++;
         }
@@ -53,7 +53,7 @@ export const Leaderboard = (props: LeaderboardProps) => {
 
     const sortFn = (p1: string, p2: string) => {
         if (sortOption == 'rank') {
-            return (sortRankReverse ? -1 : 1) * compUtil.bfsCompare(p1, p2);
+            return (sortRankReverse ? -1 : 1) * compUtil.compare(p1, p2);
         } else if (sortOption == 'wins') {
             return (sortWinsReverse ? -1 : 1) * (compUtil.getNumWins(p1) - compUtil.getNumWins(p2));
         } else if (sortOption == 'losses') {

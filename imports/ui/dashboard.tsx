@@ -5,7 +5,7 @@ import { SessionCollection, MatchCollection } from '../api/collections';
 import { ErrorModal } from './components/modal';
 import { SessionFinder } from './session-finder';
 import { TbLogout } from 'react-icons/tb';
-import { BiCheck, BiPlusCircle, BiTrash, BiX } from 'react-icons/bi';
+import { BiPlusCircle, BiTrash } from 'react-icons/bi';
 
 type DashboardPropsType = {
     setSessionCode: (sessionCode: string) => void;
@@ -80,14 +80,14 @@ export const Dashboard = (props: DashboardPropsType) => {
             <div className='rounded-lg p-5 bg-gray-100 shadow-md h-auto flex flex-col space-y-2'>
                 <div className='flex flex-row space-x-2'>
                     <input id='session-name-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='Session name' />
-                    <button className='rounded-lg w-1/4 flex justify-center items-center text-gray-300 bg-green-100 text-green-400 hover:shadow-md border border-green-200 hover:border-green-400 transition-all'
+                    <button className='rounded-lg w-1/4 flex justify-center items-center bg-green-100 text-green-400 hover:shadow-md border border-green-200 hover:border-green-400 transition-all'
                         onClick={() => handleAddSession()}>
                         Save
                     </button>
                 </div>
                 <div className='flex flex-row space-x-2'>
                     <input id='view-code-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='View code' />
-                    <button className='rounded-lg w-1/4 flex justify-center items-center text-gray-300 bg-red-100 text-red-400 hover:shadow-md border border-red-200 hover:border-red-400 transition-all'
+                    <button className='rounded-lg w-1/4 flex justify-center items-center bg-red-100 text-red-400 hover:shadow-md border border-red-200 hover:border-red-400 transition-all'
                         onClick={() => handleCancelAddSession()}>
                         Cancel
                     </button>
