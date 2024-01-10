@@ -43,7 +43,8 @@ export const SessionView: React.FC<SessionViewProps> = (props) => {
         <div>
             <div className='flex flex-row justify-between w-full'>
                 <div className='w-1/3 text-left flex items-center'>
-                    <BiArrowBack className='cursor-pointer' onClick={() => { props.setSessionCode('') }} />
+                    <BiArrowBack className='cursor-pointer' onClick={() => { props.setSessionCode('') }} /> &nbsp;&nbsp;
+                    <span className='cursor-pointer' onClick={() => { props.setSessionCode('') }}> Exit {session!.name} </span>
                 </div>
 
                 <div className="rounded-lg flex flex-row justify-between py-2 px-3 bg-gray-100 cursor-pointer w-1/2">

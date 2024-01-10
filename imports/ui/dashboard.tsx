@@ -31,7 +31,7 @@ export const Dashboard = (props: DashboardPropsType) => {
     const sessionTiles = userSessions.map((session) => {
         const numMatches = MatchCollection.find({ sessionId: session._id }).count()
         return (
-            <div className='rounded-lg bg-gray-100 h-auto flex flex-col hover:scale-105 transition-transform cursor-pointer group' onClick={() => props.setSessionCode(session.code)}>
+            <div className='rounded-lg bg-gray-100 h-auto flex flex-col hover:shadow-lg transition-all cursor-pointer group border border-gray-200' onClick={() => props.setSessionCode(session.code)}>
                 <div className='text-lg px-5 pt-4 pb-2 font-extrabold mb-3 border-b border-gray-200 flex flex-row justify-between items-center'>
                     <span>{session.name}</span>
                     <div className='invisible group-hover:visible hover:text-red-500' onClick={e => { e.stopPropagation(); deleteSession(session._id) }}>
@@ -40,7 +40,7 @@ export const Dashboard = (props: DashboardPropsType) => {
                 </div>
                 <div className='px-5 pt-2 pb-4'>
                     <p>
-                        View Code: {session.code}
+                        Share Code: {session.code}
                     </p>
                     <p>
                         Created: {session.created == undefined ? '' : session.created.toLocaleDateString('en-US', { dateStyle: 'medium' })}
@@ -80,14 +80,14 @@ export const Dashboard = (props: DashboardPropsType) => {
             <div className='rounded-lg p-5 bg-gray-100 shadow-md h-auto flex flex-col space-y-2'>
                 <div className='flex flex-row space-x-2'>
                     <input id='session-name-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='Session name' />
-                    <button className='rounded-lg w-1/4 flex justify-center items-center bg-green-100 text-green-400 hover:shadow-md border border-green-200 hover:border-green-400 transition-all'
+                    <button className='rounded-lg w-1/4 flex justify-center items-center bg-green-200 border border-transparent text-green-500 font-bold hover:shadow-md hover:border-green-400 transition-all'
                         onClick={() => handleAddSession()}>
-                        Save
+                        Add
                     </button>
                 </div>
                 <div className='flex flex-row space-x-2'>
                     <input id='view-code-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='View code' />
-                    <button className='rounded-lg w-1/4 flex justify-center items-center bg-red-100 text-red-400 hover:shadow-md border border-red-200 hover:border-red-400 transition-all'
+                    <button className='rounded-lg w-1/4 flex justify-center items-center bg-red-200 border border-transparent text-red-500 font-bold hover:shadow-md hover:border-red-400 transition-all'
                         onClick={() => handleCancelAddSession()}>
                         Cancel
                     </button>

@@ -99,7 +99,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                                 <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s13-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s1[2]} />
                                 </div>
-                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => handleEditMatch()}>
+                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-105 transition-transform' onClick={() => handleEditMatch()}>
                                     Save
                                 </button>
                             </div>
@@ -116,7 +116,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                                 <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s23-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s2[2]} />
                                 </div>
-                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => setMatchToEdit('')}>
+                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-105 transition-transform' onClick={() => setMatchToEdit('')}>
                                     Cancel
                                 </button>
                             </div>
@@ -228,7 +228,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                             <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s13' className='bg-gray-100 w-3 text-center' />
                             </div>
-                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => handleAddMatch()}>
+                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-105 transition-transform' onClick={() => handleAddMatch()}>
                                 Add
                             </button>
                         </div>
@@ -245,7 +245,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                             <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s23' className='bg-gray-100 w-3 text-center' />
                             </div>
-                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => setAddMatchState(false)}>
+                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-105 transition-transform' onClick={() => setAddMatchState(false)}>
                                 Cancel
                             </button>
                         </div>
