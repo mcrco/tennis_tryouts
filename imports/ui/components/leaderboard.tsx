@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor'
-import React, { useState } from 'react'
+import React, { ReactNode, useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.ts'
 import CompUtil from '../../util/comp-util'
@@ -88,7 +88,9 @@ export const Leaderboard = (props: LeaderboardProps) => {
         setSortOption('losses')
     }
 
-    const tableBody = players.map((player) => {
+    let tableBody: Array<ReactNode> = [];
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i];
         const wins = compUtil.getNumWins(player);
         const losses = compUtil.getNumLosses(player);
         const rank = ranks[playersRanked.indexOf(player)];
@@ -96,15 +98,16 @@ export const Leaderboard = (props: LeaderboardProps) => {
         if (!player.includes(searchedName.toLowerCase()))
             return;
 
-        return (
-            <tr className='border-b border-gray-200'>
+        tableBody.push(
+            <tr className={i != players.length - 1 ? 'border-b border-gray-200' : ''}>
                 <td className='px-5 py-4'>{player}</td>
                 <td className='px-5 py-4'>{wins}</td>
                 <td className='px-5 py-4'>{losses}</td>
                 <td className='px-5 py-4'>{rank}</td>
             </tr>
         );
-    });
+
+    }
 
     return (
         <div className='flex flex-col space-y-8'>

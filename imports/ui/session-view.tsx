@@ -23,8 +23,8 @@ export const SessionView: React.FC<SessionViewProps> = (props) => {
         props.setSessionCode('');
     }
 
-    const sessionId = session._id;
-    const ownerLoggedIn = userId != null && session.owner == userId;
+    const sessionId = session!._id;
+    const ownerLoggedIn = userId != null && session!.owner == userId;
 
     const matchListProps: MatchListProps = {
         sessionId: sessionId,
@@ -42,9 +42,8 @@ export const SessionView: React.FC<SessionViewProps> = (props) => {
     return (
         <div>
             <div className='flex flex-row justify-between w-full'>
-                <div className='w-1/3 text-left flex items-center'
-                    onClick={() => { props.setSessionCode('') }}>
-                    <BiArrowBack className='cursor-pointer' />
+                <div className='w-1/3 text-left flex items-center'>
+                    <BiArrowBack className='cursor-pointer' onClick={() => { props.setSessionCode('') }} />
                 </div>
 
                 <div className="rounded-lg flex flex-row justify-between py-2 px-3 bg-gray-100 cursor-pointer w-1/2">
@@ -73,6 +72,6 @@ export const SessionView: React.FC<SessionViewProps> = (props) => {
             {tabState == 'matchlist' && (<MatchList {...matchListProps} />)}
             {tabState == 'leaderboard' && (<Leaderboard {...leaderboardProps} />)}
             {tabState == 'comparator' && (<Compare {...compareProps} />)}
-        </div>
+        </div >
     )
 };

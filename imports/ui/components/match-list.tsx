@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 import { MatchCollection } from '/imports/api/collections.ts'
-import { BiCheck, BiEdit, BiX, BiPlus, BiPlusCircle, BiSearch, BiTrash } from 'react-icons/bi'
+import { BiEdit, BiPlusCircle, BiSearch, BiTrash } from 'react-icons/bi'
 
 export type MatchListProps = {
     sessionId: string;
@@ -99,8 +99,8 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                                 <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s13-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s1[2]} />
                                 </div>
-                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => handleEditMatch()}>
-                                    <BiCheck className='text-xl text-gray-400 hover:text-green-500 transition-colors' />
+                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => handleEditMatch()}>
+                                    Save
                                 </button>
                             </div>
                             <div className='flex flex-row'>
@@ -116,8 +116,8 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                                 <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                     <input id='s23-edit' className='bg-gray-100 w-3 text-center' defaultValue={match.s2[2]} />
                                 </div>
-                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => setMatchToEdit('')}>
-                                    <BiX className='text-xl text-gray-400 hover:text-red-500 transition-colors' />
+                                <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => setMatchToEdit('')}>
+                                    Cancel
                                 </button>
                             </div>
                         </div>
@@ -125,7 +125,7 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                 } else if (match._id == hoveredMatch && props.ownerLoggedIn) {
                     const handleDeleteMatch = () => MatchCollection.remove({ _id: match._id })
                     return (
-                        <div className='rounded-lg hover:bg-gray-200 transition-colors flex flex-row justify-center items-center space-x-4' onMouseLeave={() => setHoveredMatch('')}>
+                        <div className='rounded-lg hover:bg-gray-200 transition-colors flex flex-row justify-center items-center space-x-4 min-h-28' onMouseLeave={() => setHoveredMatch('')}>
                             <button className='rounded-lg p-4' onClick={() => setMatchToEdit(match._id)}>
                                 <BiEdit className='text-gray-400 hover:text-black transition-colors text-2xl' />
                             </button>
@@ -228,8 +228,8 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                             <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s13' className='bg-gray-100 w-3 text-center' />
                             </div>
-                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => handleAddMatch()}>
-                                <BiPlus className='text-xl text-gray-400 hover:text-green-500 transition-colors' />
+                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => handleAddMatch()}>
+                                Add
                             </button>
                         </div>
                         <div className='flex flex-row'>
@@ -245,8 +245,8 @@ export const MatchList: React.FC<MatchListProps> = (props: MatchListProps) => {
                             <div className='border-r border-gray-200 w-1/12 flex justify-center items-center'>
                                 <input id='s23' className='bg-gray-100 w-3 text-center' />
                             </div>
-                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center' onClick={() => setAddMatchState(false)}>
-                                <BiX className='text-xl text-gray-400 hover:text-red-500 transition-colors' />
+                            <button className='rounded-lg p-4 w-2/12 flex justify-center items-center hover:scale-110 transition-transform' onClick={() => setAddMatchState(false)}>
+                                Cancel
                             </button>
                         </div>
                     </div>

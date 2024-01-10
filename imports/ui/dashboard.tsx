@@ -77,17 +77,19 @@ export const Dashboard = (props: DashboardPropsType) => {
         };
 
         sessionTiles.push(
-            <div className='rounded-lg p-5 bg-gray-100 shadow-md h-auto flex flex-col hover:scale-105 transition-transform space-y-2'>
+            <div className='rounded-lg p-5 bg-gray-100 shadow-md h-auto flex flex-col space-y-2'>
                 <div className='flex flex-row space-x-2'>
                     <input id='session-name-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='Session name' />
-                    <button className='rounded-lg bg-white w-1/4 flex justify-center items-center text-gray-300 text-lg' onClick={() => handleAddSession()}>
-                        <BiCheck />
+                    <button className='rounded-lg w-1/4 flex justify-center items-center text-gray-300 bg-green-100 text-green-400 hover:shadow-md border border-green-200 hover:border-green-400 transition-all'
+                        onClick={() => handleAddSession()}>
+                        Save
                     </button>
                 </div>
                 <div className='flex flex-row space-x-2'>
                     <input id='view-code-input' className='rounded-lg p-2 pl-3 bg-white w-3/4' placeholder='View code' />
-                    <button className='rounded-lg bg-white w-1/4 flex justify-center items-center text-gray-300 text-lg' onClick={() => handleCancelAddSession()}>
-                        <BiX />
+                    <button className='rounded-lg w-1/4 flex justify-center items-center text-gray-300 bg-red-100 text-red-400 hover:shadow-md border border-red-200 hover:border-red-400 transition-all'
+                        onClick={() => handleCancelAddSession()}>
+                        Cancel
                     </button>
                 </div>
             </div>
@@ -96,7 +98,7 @@ export const Dashboard = (props: DashboardPropsType) => {
         sessionTiles.push(
             <div className='rounded-lg border-dotted border-2 h-auto flex items-center justify-center transition-colors cursor-pointer text-gray-200 text-3xl hover:text-black hover:border-black min-h-40'
                 onClick={() => setIsAddingSession(true)}>
-                <BiPlusCircle /> <span className='text-xl'> &nbsp; Add Session (e.g. Tryouts 2023) </span>
+                <BiPlusCircle /> <span className='text-xl'> &nbsp; Add Session</span>
             </div>
         )
     }
@@ -135,9 +137,9 @@ export const Dashboard = (props: DashboardPropsType) => {
                     </div>
                 </div>
 
-                <div className='cursor-pointer w-1/3 flex flex-row justify-end items-center space-x-2' onClick={() => Meteor.logout()}>
-                    <TbLogout />
-                    <span>Logout</span>
+                <div className='w-1/3 flex flex-row justify-end items-center space-x-2'>
+                    <TbLogout className='cursor-pointer' onClick={() => Meteor.logout()} />
+                    <span className='cursor-pointer' onClick={() => Meteor.logout()}>Logout</span>
                 </div>
             </div>
 
