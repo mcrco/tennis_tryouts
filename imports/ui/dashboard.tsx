@@ -57,15 +57,15 @@ export const Dashboard = (props: DashboardPropsType) => {
     if (isAddingSession) {
         const handleAddSession = () => {
             const sessionName = (document.getElementById('session-name-input') as HTMLInputElement).value;
-            const viewCode = (document.getElementById('view-code-input') as HTMLInputElement).value;
-            if (sessions.filter(session => session.code == viewCode).length != 0) {
+            const shareCode = (document.getElementById('view-code-input') as HTMLInputElement).value;
+            if (sessions.filter(session => session.code == shareCode).length != 0) {
                 setAddSessionError(true);
                 return;
             }
 
             Meteor.call('insertSession', {
                 name: sessionName,
-                code: viewCode,
+                code: shareCode,
                 created: new Date(),
                 owner: userId
             });

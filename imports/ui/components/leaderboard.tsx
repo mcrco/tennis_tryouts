@@ -108,6 +108,16 @@ export const Leaderboard = (props: LeaderboardProps) => {
         );
 
     }
+    if (tableBody.length == 0) {
+        tableBody.push(
+            <tr>
+                <td className='px-5 py-4'>No players found.</td>
+                <td className='px-5 py-4'></td>
+                <td className='px-5 py-4'></td>
+                <td className='px-5 py-4'></td>
+            </tr>
+        )
+    }
 
     return (
         <div className='flex flex-col space-y-8'>

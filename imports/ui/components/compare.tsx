@@ -18,8 +18,8 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
     const matches: MatchType[] = useTracker(() => MatchCollection.find({ sessionId: props.sessionId }).fetch() as MatchType[]);
     const compUtil = new CompUtil(matches);
 
-    let recordStatement = <></>;
-    let comparison = <></>;
+    let recordStatement = <span> One or more of the searched players not found. </span>;
+    let comparison = <span> Not enough data to compare the two players directly. </span>;
 
     if (compUtil.hasPlayer(p1) && compUtil.hasPlayer(p2)) {
         recordStatement = (<span>
@@ -39,7 +39,7 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
                 }
                 const p1Win = wins > losses;
                 return (
-                    <div className='rounded-lg bg-gray-100'>
+                    <div className='rounded-lg bg-white'>
                         <div className='flex flex-row border-b border-gray-200'>
                             <div className={'p-4 w-5/8 border-r border-gray-200 ' + (p1Win ? 'font-semibold' : '')}> {match.p1} </div>
                             <div className={'py-4 w-1/8 border-r border-gray-200 text-center ' + (match.s1[0] > match.s2[0] ? 'font-semibold' : '')}> {match.s1[0]} </div>
@@ -56,9 +56,9 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
                 )
             };
             return (
-                <div className='flex flex-col space-y-8'>
+                <div className='flex flex-col space-y-8 w-full'>
                     <span>{p1}'s has {h2h[0]} win(s) and {h2h[1]} loss(es) against {p2}. The relevant matches are listed below.</span>
-                    <div className='grid grid-cols-3 gap-4'>
+                    <div className='grid grid-cols-2 gap-4'>
                         {relevantMatches.map(mapMatch)}
                     </div>
                 </div>
@@ -142,9 +142,15 @@ export const Compare: React.FC<CompareProps> = (props: CompareProps) => {
                 </div>
             </div>
 
-            {recordStatement}
+            <div className='rounded-lg p-8 flex flex-col items-start justify-start space-y-4 border border-gray-200 bg-gray-100'>
+                <h3> Records </h3>
+                {recordStatement}
+            </div>
+            <div className='rounded-lg p-8 flex flex-col items-start justify-start space-y-4 border border-gray-200 bg-gray-100'>
+                <h3> Comparison </h3>
+                {comparison}
+            </div>
 
-            {comparison}
         </div>
     )
 }
