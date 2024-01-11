@@ -1,1 +1,1 @@
-Live @ [tennisranker.us](https://tennisranker.us)!
+Live @ [tennisranker.us](http://tennisranker.us)!
