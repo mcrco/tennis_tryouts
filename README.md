@@ -1,1 +1,1 @@
-Live @ [tennis.meteorapp.com](https://tennis.meteorapp.com)!
+Live @ [tennisranker.us](tennisranker.us)!
