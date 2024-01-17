@@ -59,7 +59,7 @@ export const App = () => {
                             </div>
                         </div>
                         <div className='flex flex-row justify-between items-start p-12  border-b border-gray-200'>
-                            <div className='w-1/2 text-left'>
+                            <div className='w-1/3 text-left'>
                                 <h3 className='mb-4'> Match List </h3>
                                 View matches in every session, filter matches by player.
                             </div>

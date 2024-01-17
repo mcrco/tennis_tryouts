@@ -30,7 +30,7 @@ Live @ [tennisranker.us](http://tennisranker.us)!
 
 - provides valuable insight to matchups between any two players using relevant matches
 - displays head to head between players
-- detects any indirect matchup (if Alice beats Bob, Bob beats Carl, then app will tell you that Alice is probably better than Carl and displays relevant matches)
+- detects any indirect matchup (if Alice beats Bob, Bob beats Carl, then app will tell you that Alice is probably better than Carl and displays relevant matches) using BFS algorithm
 - can detect rock-paper-scissors cycles within players and gives them the same rank in the leaderboard
   - e.g. if A beats B, B beats C, but C beats A, players A, B, and C are ranked the same
 - if two players aren't directly comparable, it will compare them based on the number of wins
